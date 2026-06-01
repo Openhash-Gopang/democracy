@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>K-Democracy — AI 직접 민주주의 플랫폼</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6;color:#111827;background:#f8f9fa;-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit}
+button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none}
+
+:root{
+  --vi:      #7c3aed;
+  --vi-dk:   #5b21b6;
+  --vi-bg:   #f5f3ff;
+  --vi-bd:   #ddd6fe;
+  --green:   #16a34a;
+  --green-bg:#f0fdf4;
+  --blue:    #2563eb;
+  --blue-bg: #eff6ff;
+  --orange:  #ea580c;
+  --orange-bg:#fff7ed;
+  --danger:  #ef4444;
+  --danger-bg:#fef2f2;
+  --border:  #e5e7eb;
+  --txt2:    #4b5563;
+  --txt3:    #6b7280;
+  --sb-w:    52px;
+  --sb-open: 232px;
+}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* ══ 사이드바 ══ */
+.sidebar{position:fixed;top:0;left:0;bottom:0;z-index:300;width:var(--sb-w);background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:width .2s cubic-bezier(.4,0,.2,1),box-shadow .2s}
+.sidebar:hover{width:var(--sb-open);box-shadow:4px 0 20px rgba(0,0,0,.08)}
+.sb-inner{width:var(--sb-open);flex:1;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.sb-inner::-webkit-scrollbar{display:none}
+.sb-logo{height:56px;flex-shrink:0;display:flex;align-items:center;padding:0 15px;gap:11px;border-bottom:1px solid var(--border);white-space:nowrap}
+.sb-mark{width:26px;height:26px;border-radius:7px;background:var(--vi);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.sb-mark svg{width:14px;height:14px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.sb-title{font-size:14px;font-weight:800;color:#111;letter-spacing:-.2px}
+.sb-sub{font-size:9px;color:var(--txt3);margin-top:1px}
+.sb-group{padding:16px 0 3px 15px;font-size:9px;font-weight:700;color:#c0c7d0;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;height:26px;opacity:0;transition:opacity .15s}
+.sidebar:hover .sb-group{opacity:1}
+.sb-item{display:flex;align-items:center;height:38px;padding:0 13px;margin:1px 6px;border-radius:8px;color:#6b7280;cursor:pointer;white-space:nowrap;transition:background .13s,color .13s;flex-shrink:0}
+.sb-item:hover{background:#f3f4f6;color:#111}
+.sb-item.active{background:var(--vi);color:#fff}
+.sb-icon{width:16px;height:16px;flex:0 0 16px;display:flex;align-items:center;justify-content:center}
+.sb-icon svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
+.sb-lbl{font-size:12.5px;font-weight:500;color:#374151;opacity:0;transition:opacity .13s .04s;flex:1;margin-left:10px}
+.sidebar:hover .sb-lbl{opacity:1}
+.sb-item.active .sb-lbl,.sb-item.active .sb-icon{color:#fff}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0;opacity:0;transition:opacity .13s .04s}
+.sidebar:hover .sb-dot{opacity:1}
+.sb-item.active .sb-dot{background:rgba(255,255,255,.7)}
+.sb-foot{margin-top:auto;border-top:1px solid var(--border);padding:10px 6px;flex-shrink:0;width:var(--sb-open)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 7px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:background .13s}
+.sb-user:hover{background:#f3f4f6}
+.sb-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--vi),var(--blue));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.sb-uname{font-size:12px;font-weight:600;color:#111;opacity:0;transition:opacity .13s .04s}
+.sb-urole{font-size:10px;color:var(--txt3);opacity:0;transition:opacity .13s .04s}
+.sidebar:hover .sb-uname,.sidebar:hover .sb-urole{opacity:1}
+
+/* ══ 메인 ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;margin-left:var(--sb-w)}
+.topbar{height:56px;flex-shrink:0;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:12px}
+.topbar-title{font-size:15px;font-weight:700;color:#111}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.btn-primary{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;background:var(--vi);color:#fff;transition:background .14s}
+.btn-primary:hover{background:var(--vi-dk)}
+.btn-ghost{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#374151;border:1px solid var(--border);transition:background .13s}
+.btn-ghost:hover{background:#f3f4f6}
+
+/* ══ 패널 ══ */
+.panel{flex:1;overflow-y:auto;display:none;background:#f8f9fa}
+.panel.active{display:block}
+.chat-panel{flex:1;display:none;flex-direction:column;overflow:hidden}
+.chat-panel.active{display:flex}
+
+/* ══ 홈 랜딩 ══ */
+.hero{padding:72px 40px 56px;text-align:center;background:linear-gradient(180deg,#f5f3ff 0%,#f8f9fa 65%)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--vi-bg);border:1px solid var(--vi-bd);color:var(--vi-dk);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;margin-bottom:24px}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--vi);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(26px,5vw,52px);font-weight:900;line-height:1.13;letter-spacing:-1.5px;color:#0f172a;margin-bottom:20px}
+.hero h1 .hl{background:linear-gradient(135deg,var(--vi) 0%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(14px,2vw,18px);color:var(--txt2);max-width:620px;margin:0 auto 36px;line-height:1.7}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:56px}
+.btn-hero{padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;background:var(--vi);color:#fff;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(124,58,237,.28);transition:all .18s}
+.btn-hero:hover{background:var(--vi-dk);transform:translateY(-1px)}
+.btn-hero2{padding:14px 28px;border-radius:10px;font-size:15px;font-weight:600;color:#374151;background:#fff;border:1.5px solid var(--border);display:inline-flex;align-items:center;gap:8px;transition:all .18s}
+.btn-hero2:hover{border-color:#9ca3af;transform:translateY(-1px)}
+.hero-stats{display:flex;flex-wrap:wrap;gap:32px;justify-content:center}
+.hstat{text-align:center}
+.hstat-num{font-size:clamp(22px,3.5vw,36px);font-weight:900;color:#0f172a;letter-spacing:-1px;display:block}
+.hstat-num .u{font-size:.52em;color:var(--vi);font-weight:700}
+.hstat-lbl{font-size:12px;color:var(--txt3);margin-top:2px;display:block}
+
+.inner{max-width:1020px;margin:0 auto;padding:0 40px}
+.sec-badge{display:inline-block;background:var(--vi-bg);color:var(--vi-dk);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;margin-bottom:14px;letter-spacing:.3px;text-transform:uppercase}
+.sec-title{font-size:clamp(20px,3.5vw,34px);font-weight:800;color:#0f172a;letter-spacing:-1px;margin-bottom:12px}
+.sec-sub{font-size:15px;color:var(--txt2);max-width:560px;line-height:1.7}
+
+/* 비교표 */
+.compare-sec{background:#f8f9fa;padding:72px 0}
+.compare-table{width:100%;border-collapse:collapse;margin-top:40px;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.compare-table th{padding:15px 20px 15px 28px;text-align:left;font-size:13px;font-weight:700}
+.compare-table th:first-child{padding-left:20px}
+.th-old{background:#f1f5f9;color:#475569}
+.th-new{background:var(--vi);color:#fff}
+.compare-table td{padding:13px 20px 13px 28px;border-top:1px solid var(--border);font-size:13px;color:#374151;vertical-align:middle}
+.compare-table td:first-child{font-weight:500;color:#111;background:#fafafa;padding-left:20px}
+.compare-table td:nth-child(2){color:#94a3b8}
+.compare-table td:nth-child(3){color:var(--vi-dk);font-weight:600;background:var(--vi-bg)}
+.compare-table tr:hover td{background:rgba(124,58,237,.03)}
+
+/* 특징 카드 */
+.features-sec{background:#fff;padding:72px 0}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-top:48px}
+.feat-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .2s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.feat-card:nth-child(1)::before{background:linear-gradient(90deg,var(--vi),var(--blue))}
+.feat-card:nth-child(2)::before{background:linear-gradient(90deg,var(--blue),#22d3ee)}
+.feat-card:nth-child(3)::before{background:linear-gradient(90deg,var(--green),#22d3ee)}
+.feat-card:nth-child(4)::before{background:linear-gradient(90deg,var(--orange),#f59e0b)}
+.feat-card:nth-child(5)::before{background:linear-gradient(90deg,#ec4899,var(--vi))}
+.feat-card:nth-child(6)::before{background:linear-gradient(90deg,#0f172a,#475569)}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.09)}
+.feat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.feat-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.feat-card h3{font-size:16px;font-weight:700;color:#0f172a;margin-bottom:10px}
+.feat-card p{font-size:13px;color:var(--txt2);line-height:1.75}
+.feat-source{margin-top:14px;padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:11px;color:var(--txt3);border-left:2px solid var(--vi)}
+
+/* 작동 방식 */
+.how-sec{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);padding:72px 0;color:#fff}
+.steps{display:flex;flex-direction:column;margin-top:48px}
+.step{display:flex;gap:24px;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.step:last-child{border-bottom:none}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--vi);color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body h4{font-size:15px;font-weight:700;color:#f1f5f9;margin-bottom:5px}
+.step-body p{font-size:13px;color:#94a3b8;line-height:1.65}
+.step-badge{margin-top:8px;display:inline-block;background:rgba(124,58,237,.2);color:#c4b5fd;border:1px solid rgba(124,58,237,.35);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:600}
+
+/* 보안 */
+.sec-dark{background:#0f172a;padding:72px 0;color:#fff}
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:40px}
+.sec-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px}
+.sec-card svg{width:22px;height:22px;margin-bottom:12px;stroke:var(--vi);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
+.sec-card h4{font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+.sec-card p{font-size:12px;color:#64748b;line-height:1.6}
+
+/* CTA */
+.cta-sec{background:linear-gradient(135deg,#0f172a 0%,#2e1065 100%);color:#fff;text-align:center;padding:80px 40px}
+.cta-sec h2{font-size:clamp(22px,4vw,40px);font-weight:900;margin-bottom:14px;letter-spacing:-1px}
+.cta-sec p{font-size:16px;color:#94a3b8;margin-bottom:32px}
+.footer{background:#0f172a;color:#475569;padding:28px 40px;text-align:center;font-size:12px}
+
+/* ══ 내부 패널 공통 ══ */
+.ph{padding:28px 28px 0}
+.ph-badge{display:inline-block;background:var(--vi-bg);color:var(--vi-dk);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;margin-bottom:10px;letter-spacing:.3px;text-transform:uppercase}
+.ph-title{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.5px;margin-bottom:4px}
+.ph-sub{font-size:13px;color:var(--txt2);margin-bottom:24px}
+.panel-body{padding:0 28px 28px}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:14px}
+.card-hd{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-hd-t{font-size:13px;font-weight:700;color:#111}
+.card-hd-a{font-size:12px;font-weight:600;color:var(--vi-dk);cursor:pointer}
+.card-bd{padding:16px 18px}
+
+.data-table{width:100%;border-collapse:collapse;background:#fff;border-radius:11px;overflow:hidden;border:1px solid var(--border);font-size:13px}
+.data-table th{padding:11px 16px;background:#f8f9fa;font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:.4px;text-transform:uppercase;border-bottom:1px solid var(--border);text-align:left}
+.data-table td{padding:11px 16px;border-bottom:1px solid var(--border);color:#374151}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#fafafa}
+.data-table td:first-child{font-weight:500;color:#111}
+
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
+.b-ok{background:var(--green-bg);color:#065f46}
+.b-wait{background:var(--orange-bg);color:#9a3412}
+.b-done{background:#f1f5f9;color:#475569}
+.b-vi{background:var(--vi-bg);color:var(--vi-dk)}
+.b-blue{background:var(--blue-bg);color:#1d4ed8}
+.b-proc{background:#faf5ff;color:#6d28d9}
+.b-hot{background:#fef2f2;color:#991b1b}
+
+/* 안건 카드 */
+.bill-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .18s}
+.bill-card:hover{border-color:var(--vi);box-shadow:0 4px 14px rgba(124,58,237,.1);transform:translateY(-2px)}
+.bill-title{font-size:14px;font-weight:700;color:#111;margin-bottom:6px}
+.bill-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--txt3);margin-bottom:10px}
+.bill-progress{height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;margin-bottom:8px}
+.bill-fill{height:100%;border-radius:4px;transition:width .4s}
+.bill-actions{display:flex;gap:6px}
+.b-btn{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:background .13s}
+.b-btn-for{background:var(--vi);color:#fff}
+.b-btn-for:hover{background:var(--vi-dk)}
+.b-btn-against{background:transparent;border:1px solid var(--border);color:#374151}
+.b-btn-against:hover{background:#f3f4f6}
+.b-btn-detail{padding:7px 11px;border-radius:7px;font-size:12px;background:transparent;border:1px solid var(--border);color:#374151;cursor:pointer}
+
+/* 투표 게이지 */
+.vote-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:8px 0}
+.vote-for{background:#7c3aed;transition:width .4s}
+.vote-against{background:#e5e7eb}
+
+/* 통계 */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:18px}
+.stat-val{font-size:26px;font-weight:900;color:#0f172a;letter-spacing:-1px}
+.stat-lbl{font-size:12px;color:var(--txt3);margin-top:4px}
+.stat-sub{font-size:11px;font-weight:600;margin-top:4px;color:var(--vi-dk)}
+
+/* 필터 */
+.filter-bar{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.f-btn{padding:5px 13px;border-radius:18px;font-size:12px;font-weight:600;border:1.5px solid var(--border);background:#fff;color:#374151;cursor:pointer;transition:all .13s}
+.f-btn.active{border-color:var(--vi);background:var(--vi-bg);color:var(--vi-dk)}
+
+/* 알림 */
+.alert-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+.alert-row:last-child{border-bottom:none}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.alert-info{flex:1}
+.alert-t{font-size:13px;font-weight:600;color:#111;margin-bottom:2px}
+.alert-d{font-size:12px;color:var(--txt3)}
+
+/* GDC 투표권 카드 */
+.gdc-vote-card{background:linear-gradient(135deg,#2e1065,#4c1d95);border-radius:14px;padding:22px;color:#fff;margin-bottom:16px}
+.gdc-vote-power{font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.gdc-vote-label{font-size:12px;color:#c4b5fd}
+.gdc-vote-bars{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.gdc-vote-bar-row{display:flex;align-items:center;gap:10px;font-size:11px;color:#c4b5fd}
+.gdc-vote-bar-track{flex:1;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.gdc-vote-bar-fill{height:100%;background:#c4b5fd;border-radius:2px}
+
+/* 채팅 */
+.chat-meta{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-av{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--vi),var(--blue));display:flex;align-items:center;justify-content:center}
+.chat-av svg{width:16px;height:16px;stroke:#fff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chat-name{font-size:13px;font-weight:700}
+.chat-status{font-size:11px;color:var(--vi-dk);font-weight:500;display:flex;align-items:center;gap:4px}
+.chat-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--vi);display:inline-block}
+.chat-body{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:12px;background:#f8f9fa}
+.b-ai{max-width:72%;align-self:flex-start;background:#fff;border:1px solid var(--border);border-radius:4px 13px 13px 13px;padding:11px 14px;font-size:13.5px;line-height:1.7;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.b-user{max-width:72%;align-self:flex-end;background:var(--vi);color:#fff;border-radius:13px 13px 4px 13px;padding:11px 14px;font-size:13.5px;line-height:1.7}
+.b-sys{align-self:center;background:#fff;border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:11px;color:var(--txt3)}
+.quick-row{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start}
+.qb{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:5px 12px;font-size:12px;font-weight:500;color:#374151;cursor:pointer;transition:all .12s}
+.qb:hover{border-color:var(--vi);background:var(--vi-bg);color:var(--vi-dk)}
+.chat-wrap{border-top:1px solid var(--border);background:#fff;padding:10px 16px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+.chat-inp{flex:1;background:#f3f4f6;border:1px solid var(--border);border-radius:11px;padding:9px 13px;font-family:'Inter',sans-serif;font-size:13.5px;resize:none;outline:none;max-height:110px;transition:border-color .13s}
+.chat-inp:focus{border-color:var(--vi);background:#fff}
+.chat-send{width:36px;height:36px;border-radius:10px;background:var(--vi);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .13s;border:none}
+.chat-send:hover{background:var(--vi-dk)}
+.chat-send:disabled{background:#ddd6fe;cursor:default}
+.chat-send svg{width:15px;height:15px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* 폼 */
+.f-group{margin-bottom:12px}
+.f-label{font-size:12px;font-weight:600;color:#374151;margin-bottom:5px;display:block}
+.f-input{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .13s}
+.f-input:focus{border-color:var(--vi)}
+.f-textarea{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:vertical;min-height:80px;transition:border-color .13s}
+.f-textarea:focus{border-color:var(--vi)}
+.f-select{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-family:'Inter',sans-serif;font-size:13px;outline:none}
+.f-btn-full{width:100%;padding:10px;border-radius:8px;background:var(--vi);color:#fff;font-size:14px;font-weight:700;border:none;cursor:pointer;margin-top:4px;transition:background .13s}
+.f-btn-full:hover{background:var(--vi-dk)}
+
+/* 토스트·모달 */
+.toast{position:fixed;top:16px;right:16px;z-index:9999;background:#0f172a;color:#fff;border-radius:10px;padding:11px 16px;font-size:13px;font-weight:500;opacity:0;transform:translateY(-8px);transition:all .2s;max-width:320px;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:24px;max-width:520px;width:calc(100% - 32px);max-height:85vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{font-size:18px;color:var(--txt3);cursor:pointer}
+
+@media(max-width:1100px){.stat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr}.stat-grid{grid-template-columns:1fr}}
+</style>
+<script src="./pdv.js"></script>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ 사이드바 ══ -->
+<aside class="sidebar">
+<div class="sb-inner">
+  <div class="sb-logo">
+    <div class="sb-mark">
+      <!-- 투표함 아이콘 -->
+      <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+    </div>
+    <div>
+      <div class="sb-title">K-Democracy</div>
+      <div class="sb-sub">고팡 직접 민주주의</div>
+    </div>
+  </div>
+
+  <div class="sb-group">시민</div>
+
+  <button class="sb-item active" onclick="show('home',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+    <span class="sb-lbl">홈</span>
+  </button>
+
+  <button class="sb-item" onclick="show('chat',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+    <span class="sb-lbl">AI 민주주의 상담</span>
+  </button>
+
+  <button class="sb-item" onclick="show('propose',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+    <span class="sb-lbl">안건 제안</span>
+  </button>
+
+  <button class="sb-item" onclick="show('bills',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+    <span class="sb-lbl">안건 목록</span>
+    <span class="sb-dot"></span>
+  </button>
+
+  <button class="sb-item" onclick="show('vote',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+    <span class="sb-lbl">의결 참여</span>
+    <span class="sb-dot"></span>
+  </button>
+
+  <button class="sb-item" onclick="show('myvote',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg></span>
+    <span class="sb-lbl">나의 투표권 (GDC)</span>
+  </button>
+
+  <div class="sb-group">의회</div>
+
+  <button class="sb-item" onclick="show('lower',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+    <span class="sb-lbl">하원 (GDC 가중 투표)</span>
+  </button>
+
+  <button class="sb-item" onclick="show('upper',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>
+    <span class="sb-lbl">상원 (1인 1표 집행부)</span>
+  </button>
+
+  <button class="sb-item" onclick="show('law',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg></span>
+    <span class="sb-lbl">평행 헌법 & 법률</span>
+  </button>
+
+  <div class="sb-group">통계</div>
+
+  <button class="sb-item" onclick="show('stats',this)">
+    <span class="sb-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+    <span class="sb-lbl">의결 통계 & 감사</span>
+  </button>
+
+  <div class="sb-foot">
+    <a href="https://gopang.net" style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:8px;color:var(--txt3);transition:background .13s;overflow:hidden;white-space:nowrap;">
+      <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span class="sb-lbl" style="font-size:12px;font-weight:600">← 고팡으로</span>
+    </a>
+    <div class="sb-user">
+      <div class="sb-av">나</div>
+      <div><div class="sb-uname">고팡 시민</div><div class="sb-urole">투표권 연동됨</div></div>
+    </div>
+  </div>
+</div>
+</aside>
+
+<!-- ══ 메인 ══ -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title" id="topbar-title">홈</span>
+    <div class="topbar-right">
+      <button class="btn-ghost" onclick="show('myvote',null)">🗳️ 내 투표권</button>
+      <button class="btn-primary" onclick="show('propose',null)">+ 안건 제안</button>
+    </div>
+  </div>
+
+  <!-- ════ 홈 랜딩 ════ -->
+  <div class="panel active" id="p-home" style="background:#fff">
+  <div style="overflow-y:auto;height:100%">
+
+    <div class="hero">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        고팡 AI 생태계 직접 민주주의 · DAWN
+      </div>
+      <h1>고팡의 주인은<br><span class="hl">고팡 시민 모두입니다</span></h1>
+      <p class="hero-sub">
+        누구나 안건을 제안하고, GDC 기여에 비례한 투표권으로 결정하며,
+        1인 1표 상원이 대자본의 독주를 견제합니다
+      </p>
+      <div class="hero-cta">
+        <button class="btn-hero" onclick="show('propose',null)">
+          <svg width="17" height="17" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          안건 제안하기
+        </button>
+        <button class="btn-hero2" onclick="document.getElementById('compare-anchor').scrollIntoView({behavior:'smooth'})">
+          기존 민주주의와 비교
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-num">∞<span class="u"></span></span><span class="hstat-lbl">누구나 안건 제안</span></div>
+        <div class="hstat"><span class="hstat-num">1,000<span class="u">표</span></span><span class="hstat-lbl">1인 최대 투표권</span></div>
+        <div class="hstat"><span class="hstat-num">2<span class="u">원</span></span><span class="hstat-lbl">하원 + 상원 이원 구조</span></div>
+        <div class="hstat"><span class="hstat-num">100<span class="u">%</span></span><span class="hstat-lbl">PDV 의결 투명 기록</span></div>
+      </div>
+    </div>
+
+    <!-- 비교표 -->
+    <div class="compare-sec" id="compare-anchor">
+      <div class="inner">
+        <div class="sec-badge">기존 민주주의 vs K-Democracy</div>
+        <h2 class="sec-title">AI 평행 민주주의는 이렇게 다릅니다</h2>
+        <p class="sec-sub">대의 민주주의의 한계를 극복하는 고팡의 직접 민주주의 설계입니다.</p>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;background:#f8f9fa">비교 항목</th>
+              <th class="th-old">기존 대의 민주주의</th>
+              <th class="th-new">K-Democracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>의사결정 방식</td><td>선출 대표가 대신 결정</td><td>시민이 <strong>직접 안건 제안 · 의결</strong></td></tr>
+            <tr><td>투표 참여</td><td>수년에 한 번 선거</td><td><strong>상시 안건별 직접 투표</strong></td></tr>
+            <tr><td>투표권 배분</td><td>1인 1표 단일 구조</td><td>GDC 기여 기반 <strong>최대 1,000표 + 1인 1표 상원</strong> 이원 균형</td></tr>
+            <tr><td>대자본 견제</td><td>로비·정치자금 영향 존재</td><td>상원(1인 1표 집행부)이 <strong>거부권 행사</strong> 가능</td></tr>
+            <tr><td>안건 발의</td><td>의원만 가능</td><td><strong>누구나</strong> 제안 — 일정 동의(1,000표) 확보 시 상정</td></tr>
+            <tr><td>의결 과정</td><td>밀실 심의, 로비 가능</td><td>게시판 공개 찬반 공방 → <strong>무작위 배심 의결</strong></td></tr>
+            <tr><td>의결 결과 기록</td><td>회의록 (위변조 가능)</td><td>모든 의결 <strong>PDV + OpenHash 불변 기록</strong></td></tr>
+            <tr><td>법률 체계</td><td>현실 헌법·법률</td><td><strong>평행 헌법·평행 형법</strong> 등 고팡 전용 규범</td></tr>
+            <tr><td>규칙 개정</td><td>수개월~수년 소요</td><td>안건 의결 즉시 <strong>고팡 운영 규칙 자동 갱신</strong></td></tr>
+            <tr style="background:linear-gradient(90deg,#f5f3ff,#eff6ff)">
+              <td style="font-weight:700;color:#0f172a">투명성</td>
+              <td>부분 공개</td>
+              <td style="font-weight:700;color:#0f172a">전 과정 <strong>오픈소스 + PDV 공개</strong><br><small style="font-weight:400;color:var(--vi-dk)">→ K-Democracy만의 고유한 강점</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 특징 카드 -->
+    <div class="features-sec">
+      <div class="inner">
+        <div class="sec-badge">핵심 특징</div>
+        <h2 class="sec-title">K-Democracy는 어떻게 작동하나요</h2>
+        <p class="sec-sub">대자본도, 특정 세력도 독주할 수 없는 균형 잡힌 직접 민주주의입니다.</p>
+        <div class="features-grid">
+
+          <div class="feat-card" style="grid-column:1/-1;border:2px solid var(--vi);background:linear-gradient(135deg,#f5f3ff 0%,#eff6ff 100%)">
+            <div style="display:flex;align-items:flex-start;gap:20px">
+              <div class="feat-icon" style="background:#fff;color:var(--vi-dk);flex-shrink:0;width:52px;height:52px;border-radius:14px;box-shadow:0 2px 8px rgba(124,58,237,.2)">
+                <svg viewBox="0 0 24 24" style="width:26px;height:26px"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+              </div>
+              <div style="flex:1">
+                <div style="font-size:11px;font-weight:700;color:var(--vi-dk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">K-Democracy 핵심 우위</div>
+                <h3 style="font-size:19px;margin-bottom:10px;color:#0f172a">하원(GDC 가중) + 상원(1인 1표) 이원 균형</h3>
+                <p style="font-size:13.5px;color:#374151;line-height:1.8">
+                  K-Democracy는 두 가지 균형추를 동시에 작동시킵니다. <strong>하원</strong>은 GDC 사용량·보유량에 비례해 최대 1,000표까지 행사할 수 있어, 고팡 생태계에 더 많이 기여한 시민의 목소리가 더 크게 반영됩니다. 그러나 대량 GDC 보유자들이 독주하지 못하도록, <strong>1인 1표로 선출된 상원(집행부)</strong>이 거부권을 행사합니다.<br><br>
+                  이 이원 구조는 참여 유인과 형평성을 동시에 달성합니다. 모든 의결 과정과 결과는 PDV와 OpenHash를 통해 위변조 불가하게 기록됩니다. <strong>이것이 K-Democracy만이 제공할 수 있는 고유한 가치입니다.</strong>
+                </p>
+                <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🗳️ 1인 최대 1,000표 하원</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">⚖️ 1인 1표 상원 거부권</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🔐 PDV + OpenHash 불변 기록</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">📜 오픈소스 전면 공개</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon" style="background:var(--vi-bg);color:var(--vi-dk)">
+              <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>누구나 안건 제안</h3>
+            <p>AI 서버 칩 교체, 거래 수수료 조정, 회계 방식 변경, 소규모 서버 클러스터 설립 등 고팡 생태계의 구축과 운영에 관한 모든 사항을 누구나 제안할 수 있습니다. 게시판에서 1,000표 동의를 확보하면 심사 게시판에 상정됩니다.</p>
+            <div class="feat-source">📋 게시판 공개 제안 → 1,000표 동의 → 심사 상정 → 찬반 공방 → 무작위 배심 의결</div>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon" style="background:var(--blue-bg);color:#1d4ed8">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>무작위 배심 의결</h3>
+            <p>공방이 끝난 안건은 무작위로 선정된 일정 수의 시민들에게 찬반 양측의 주요 논지와 주장을 전달하고 의결을 진행합니다. 특정 세력이 의결단을 사전 조직하는 것을 원천 차단합니다.</p>
+            <div class="feat-source">🎲 무작위 배심원 선정 · 찬반 논지 전달 · 비밀 투표 · PDV 결과 기록</div>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon" style="background:var(--green-bg);color:#065f46">
+              <svg viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+            </div>
+            <h3>평행 헌법 & 법률 체계</h3>
+            <p>의결된 안건은 고팡 운영 규칙에 추가되거나 기존 규칙을 갱신합니다. 현실의 헌법·형법·민법·행정법·상법·세법에 대응하는 <strong>평행 헌법, 평행 형법</strong> 등으로 구성됩니다.</p>
+            <div class="feat-source">📜 평행 헌법 · 평행 형법 · 평행 민법 · 평행 상법 · 평행 세법 · 평행 행정법</div>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon" style="background:var(--orange-bg);color:var(--orange)">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3>GDC 연동 투표권</h3>
+            <p>1인 1표를 기반으로 GDC 사용량(거래량)과 보유량에 따라 최대 1,000표까지 행사합니다. GDC를 더 많이 사용할수록 투표권이 늘어나므로, 생태계 기여가 많을수록 의사 결정에 더 큰 영향력을 갖습니다.</p>
+            <div class="feat-source">💰 GDC 보유량 + 거래량 기반 · 최소 1표 ~ 최대 1,000표 · 실시간 산정</div>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon" style="background:#f1f5f9;color:#475569">
+              <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>의결 기록 PDV 보관</h3>
+            <p>모든 안건, 찬반 투표 내역, 의결 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링됩니다. 어떤 주체도 의결 결과를 사후에 위변조할 수 없습니다. 고팡의 투명성을 수학적으로 보장합니다.</p>
+            <div class="feat-source">🔐 PDV 암호화 + OpenHash 불변 기록 · 의결 이력 영구 보관 · 전면 공개</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 작동 방식 -->
+    <div class="how-sec">
+      <div class="inner">
+        <div class="sec-badge" style="background:rgba(124,58,237,.2);color:#c4b5fd">작동 방식</div>
+        <h2 class="sec-title" style="color:#fff">안건이 법률이 되는 과정</h2>
+        <p class="sec-sub" style="color:#94a3b8">제안부터 평행 법률 반영까지 — 6단계 K-Democracy 워크플로우</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>안건 제안</h4>
+              <p>고팡 시민 누구나 democracy.gopang.net 게시판에 안건을 게재합니다. AI 서버 칩 교체, 수수료 조정, 회계 방식 변경, 소규모 서버 클러스터 설립 등 고팡 생태계의 구축과 운영에 관한 모든 사항이 대상입니다.</p>
+              <span class="step-badge">누구나 제안 가능 · 제목·배경·기대 효과 기재 · PDV 제안자 기록</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>동의 확보 (1,000표)</h4>
+              <p>게재된 안건은 다른 시민들의 동의를 얻어야 합니다. 동의도 GDC 기반 투표권 비례로 행사됩니다. 일정 수(예: 1,000표)의 동의를 확보한 안건만 심사 게시판에 상정됩니다. 이를 통해 소수의 민감한 안건이 자원 낭비 없이 걸러집니다.</p>
+              <span class="step-badge">GDC 비례 동의 투표 · 1,000표 기준 · 미달 시 자동 보류</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>심사 게시판 — 찬반 공방</h4>
+              <p>상정된 안건은 심사 게시판에 공개되어 찬반 양론의 공방이 진행됩니다. 모든 논거와 반론은 공개되며, AI가 핵심 논지를 요약합니다. 공방 기간은 안건 복잡도에 따라 자동 조정됩니다.</p>
+              <span class="step-badge">전면 공개 찬반 토론 · AI 논지 요약 · 공방 기간 자동 조정</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>하원 의결 (GDC 가중 투표)</h4>
+              <p>무작위로 선정된 배심원단에게 찬반 양측의 주요 논지와 주장이 전달되고 의결이 진행됩니다. 각 배심원은 GDC 기여에 비례한 투표권(1~1,000표)을 행사합니다.</p>
+              <span class="step-badge">무작위 배심원 선정 · GDC 비례 1~1,000표 · 비밀 투표</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <h4>상원 검토 (1인 1표 거부권)</h4>
+              <p>하원에서 가결된 안건은 1인 1표로 선출된 상원(집행부)의 검토를 거칩니다. 상원은 GDC 대량 보유자의 독주를 견제하기 위해 거부권을 행사할 수 있습니다. 거부된 안건은 수정 후 재상정되거나 폐기됩니다.</p>
+              <span class="step-badge">1인 1표 상원 · 거부권 행사 가능 · 수정 재상정 허용</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+              <h4>평행 법률 자동 반영 & PDV 기록</h4>
+              <p>상원을 통과한 안건은 고팡의 운영 규칙(평행 헌법·형법·민법 등)에 즉시 반영됩니다. 모든 과정과 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링되어 영구 보관됩니다.</p>
+              <span class="step-badge">운영 규칙 즉시 갱신 · PDV 영구 기록 · OpenHash 불변 앵커링</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 보안 -->
+    <div class="sec-dark">
+      <div class="inner">
+        <div class="sec-badge" style="background:rgba(255,255,255,.1);color:#94a3b8">투명성 & 무결성</div>
+        <h2 class="sec-title" style="color:#fff">의결 결과는 누구도 바꿀 수 없습니다</h2>
+        <p class="sec-sub" style="color:#64748b">오픈소스 코드 + PDV + OpenHash — 세 겹의 투명성 보장 구조</p>
+        <div class="sec-grid">
+          <div class="sec-card">
+            <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            <h4>오픈소스 전면 공개</h4>
+            <p>투표 집계 알고리즘부터 배심원 선정 로직까지 모든 코드가 GitHub에 공개됩니다. 누구나 검증하고 개선안을 제출할 수 있습니다.</p>
+          </div>
+          <div class="sec-card">
+            <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <h4>PDV 의결 기록</h4>
+            <p>모든 안건·투표·의결 결과가 AES-256-GCM으로 암호화 저장. 개인 투표 내역은 본인만 열람, 집계 결과는 전면 공개.</p>
+          </div>
+          <div class="sec-card">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <h4>OpenHash 불변 앵커링</h4>
+            <p>의결 결과 해시가 OpenHash 분산 원장에 앵커링. 사후 위변조 수학적 불가. 의결 이력 영구 보관.</p>
+          </div>
+          <div class="sec-card">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <h4>고팡 IPv6 신원 기반</h4>
+            <p>투표는 고팡 PDV 신원 인증 기반. 동일인 중복 투표 원천 차단. 신원 도용 방지. 익명 투표 허용.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-sec">
+      <div class="inner">
+        <h2>지금 바로 고팡 민주주의에 참여하세요</h2>
+        <p>안건을 제안하고, 토론하고, 투표하세요.<br>고팡의 방향은 시민 모두가 함께 결정합니다.</p>
+        <div class="hero-cta">
+          <button class="btn-hero" onclick="show('propose',null)" style="font-size:16px;padding:16px 32px">
+            <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            안건 제안하기
+          </button>
+          <button class="btn-hero" onclick="show('vote',null)" style="font-size:16px;padding:16px 32px;background:rgba(255,255,255,.15);box-shadow:none;">
+            🗳️ 의결 참여하기
+          </button>
+          <a href="https://gopang.net" class="btn-hero2" style="font-size:16px;padding:16px 32px;background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)">고팡으로 돌아가기</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div style="margin-bottom:6px;color:#64748b">K-Democracy · 고팡 AI 생태계 · AI City Inc. · DAWN: Democracy is All We Need</div>
+      <div>오픈소스 직접 민주주의 · OpenHash 불변 기록 · PDV 신원 기반 · <a href="https://gopang.net" style="color:var(--vi)">gopang.net</a></div>
+    </div>
+  </div>
+  </div><!-- /p-home -->
+
+  <!-- ════ AI 민주주의 상담 ════ -->
+  <div class="chat-panel" id="p-chat">
+    <div class="chat-meta">
+      <div class="chat-av"><svg viewBox="0 0 24 24"><path d="M18 16l4-4-4-4M6 8l-4 4 4 4m8.5-12l-5 16"/></svg></div>
+      <div>
+        <div class="chat-name">K-Democracy AI</div>
+        <div class="chat-status">안건 분석 · 법률 조회 · 논지 요약</div>
+      </div>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <div class="b-ai">안녕하세요! K-Democracy AI입니다. 🗳️<br><br>안건 제안 도움, 찬반 논지 분석, 평행 법률 조회, 투표권 확인 등 고팡 민주주의에 관한 모든 질문에 답합니다.<br><br><em style="font-size:12px;color:var(--txt3)">※ 모든 의결 기록은 PDV에 저장됩니다</em></div>
+      <div class="b-sys">아래에서 빠르게 시작하세요</div>
+      <div class="quick-row">
+        <button class="qb" onclick="qs('안건을 제안하고 싶어요. 도와주세요')">📝 안건 제안 도움</button>
+        <button class="qb" onclick="qs('내 GDC 투표권이 몇 표인지 알려줘')">🗳️ 투표권 확인</button>
+        <button class="qb" onclick="qs('현재 의결 진행 중인 안건을 알려줘')">📋 진행 중 안건</button>
+        <button class="qb" onclick="qs('평행 헌법이 무엇인지 설명해 줘')">📜 평행 헌법 설명</button>
+        <button class="qb" onclick="qs('하원과 상원의 차이가 무엇인가요?')">⚖️ 하원 vs 상원</button>
+        <button class="qb" onclick="qs('DAWN 철학에 대해 설명해 줘')">🌅 DAWN 철학</button>
+      </div>
+    </div>
+    <div class="chat-wrap">
+      <textarea class="chat-inp" id="chat-input" rows="1"
+        placeholder="안건, 투표, 민주주의에 대해 질문하세요…"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,110)+'px'"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend()}"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="chatSend()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ 안건 제안 ════ -->
+  <div class="panel" id="p-propose">
+    <div class="ph">
+      <div class="ph-badge">안건 제안</div>
+      <div class="ph-title">새 안건 제안하기</div>
+      <div class="ph-sub">고팡 생태계의 구축과 운영에 관한 모든 사항을 제안할 수 있습니다. 1,000표 동의를 확보하면 심사 게시판에 상정됩니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">📝 안건 작성</span></div>
+        <div class="card-bd">
+          <div class="f-group"><label class="f-label">안건 분류</label>
+            <select class="f-select">
+              <option>인프라 (서버·네트워크·칩)</option>
+              <option>경제 (수수료·GDC·분배)</option>
+              <option>법률 (평행 헌법·형법·민법)</option>
+              <option>거버넌스 (의결 규칙·투표권)</option>
+              <option>보안 (인증·암호화)</option>
+              <option>기타</option>
+            </select>
+          </div>
+          <div class="f-group"><label class="f-label">안건 제목</label>
+            <input class="f-input" placeholder="예: 고팡 거래 수수료를 0.2%에서 0.15%로 인하 제안" id="bill-title-input">
+          </div>
+          <div class="f-group"><label class="f-label">제안 배경 및 근거</label>
+            <textarea class="f-textarea" placeholder="이 안건을 제안하는 이유와 기대 효과를 상세히 작성하세요." id="bill-bg-input" style="min-height:120px"></textarea>
+          </div>
+          <div class="f-group"><label class="f-label">예상 반대 논거 및 대응</label>
+            <textarea class="f-textarea" placeholder="예상되는 반대 의견과 그에 대한 대응을 미리 작성하면 심사 통과 가능성이 높아집니다." id="bill-counter-input"></textarea>
+          </div>
+          <div style="background:var(--vi-bg);border-radius:8px;padding:10px;font-size:12px;color:var(--txt2);margin-bottom:12px;border:1px solid var(--vi-bd)">
+            🗳️ 제안 즉시 게시판에 공개됩니다. <strong>1,000표 동의</strong>를 확보해야 심사 게시판에 상정됩니다. 모든 제안 기록은 PDV에 저장됩니다.
+          </div>
+          <button class="f-btn-full" onclick="submitBill()">안건 게재하기</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">💡 제안 가이드</span></div>
+        <div class="card-bd" style="font-size:13px;color:var(--txt2);line-height:1.8">
+          <strong>제안 가능한 안건 예시:</strong><br>
+          · AI 서버 주요 칩을 H200 → 화웨이 어센드 910C로 변경<br>
+          · 각 지역별 소규모 서버 클러스터 설립<br>
+          · 고팡 거래 수수료 0.2% → 0.15% 인하<br>
+          · 회계 방식 변경 (IFRS 기반 채택)<br>
+          · GDC 최대 투표권 상한을 1,000표 → 500표로 조정<br>
+          · 평행 형법 제3조 개정 (디지털 사기 처벌 강화)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 안건 목록 ════ -->
+  <div class="panel" id="p-bills">
+    <div class="ph">
+      <div class="ph-badge">안건 목록</div>
+      <div class="ph-title">진행 중인 안건</div>
+      <div class="ph-sub">동의 확보 중 · 심사 중 · 의결 중인 안건을 확인합니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="filter-bar">
+        <button class="f-btn active" onclick="filterBills('all',this)">전체</button>
+        <button class="f-btn" onclick="filterBills('petition',this)">동의 확보 중</button>
+        <button class="f-btn" onclick="filterBills('review',this)">심사 중</button>
+        <button class="f-btn" onclick="filterBills('vote',this)">의결 중</button>
+        <button class="f-btn" onclick="filterBills('passed',this)">가결</button>
+        <button class="f-btn" onclick="filterBills('rejected',this)">부결</button>
+      </div>
+      <div id="bills-list">
+
+        <div class="bill-card" data-status="vote">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="bill-title">고팡 거래 수수료를 0.2%에서 0.15%로 인하 제안</div>
+            <span class="badge b-proc">🗳️ 의결 중</span>
+          </div>
+          <div class="bill-meta">
+            <span>경제</span><span>·</span><span>제안자: 김○○</span><span>·</span><span>2026.05.28</span>
+          </div>
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:10px">찬성 62% · 반대 38% · 잔여 3일</div>
+          <div class="vote-bar"><div class="vote-for" style="width:62%"></div><div class="vote-against" style="width:38%"></div></div>
+          <div class="bill-actions">
+            <button class="b-btn b-btn-for" onclick="castVote(this,'찬성')">✓ 찬성</button>
+            <button class="b-btn b-btn-against" onclick="castVote(this,'반대')">✗ 반대</button>
+            <button class="b-btn-detail" onclick="showBillDetail('수수료 인하')">상세</button>
+          </div>
+        </div>
+
+        <div class="bill-card" data-status="vote">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="bill-title">AI 서버 주요 칩 H200 → 화웨이 어센드 910C 변경 제안</div>
+            <span class="badge b-proc">🗳️ 의결 중</span>
+          </div>
+          <div class="bill-meta"><span>인프라</span><span>·</span><span>제안자: 이○○</span><span>·</span><span>2026.05.25</span></div>
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:10px">찬성 44% · 반대 56% · 잔여 5일</div>
+          <div class="vote-bar"><div class="vote-for" style="width:44%"></div><div class="vote-against" style="width:56%"></div></div>
+          <div class="bill-actions">
+            <button class="b-btn b-btn-for" onclick="castVote(this,'찬성')">✓ 찬성</button>
+            <button class="b-btn b-btn-against" onclick="castVote(this,'반대')">✗ 반대</button>
+            <button class="b-btn-detail" onclick="showBillDetail('칩 교체')">상세</button>
+          </div>
+        </div>
+
+        <div class="bill-card" data-status="review">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="bill-title">각 지역별 소규모 서버 클러스터 설립 제안</div>
+            <span class="badge b-blue">📋 심사 중</span>
+          </div>
+          <div class="bill-meta"><span>인프라</span><span>·</span><span>제안자: 박○○</span><span>·</span><span>2026.05.20</span></div>
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:10px">찬반 공방 진행 중 · 댓글 48개</div>
+          <div class="bill-actions">
+            <button class="b-btn b-btn-for" style="flex:2" onclick="toast('💬 토론 게시판으로 이동합니다.')">💬 토론 참여</button>
+            <button class="b-btn-detail" onclick="showBillDetail('서버 클러스터')">상세</button>
+          </div>
+        </div>
+
+        <div class="bill-card" data-status="petition">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="bill-title">평행 형법 제3조 개정 — 디지털 사기 처벌 강화</div>
+            <span class="badge b-wait">📣 동의 확보 중</span>
+          </div>
+          <div class="bill-meta"><span>법률</span><span>·</span><span>제안자: 최○○</span><span>·</span><span>2026.05.31</span></div>
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:6px">340 / 1,000표 동의 확보</div>
+          <div class="bill-progress"><div class="bill-fill" style="width:34%;background:var(--vi)"></div></div>
+          <div class="bill-actions">
+            <button class="b-btn b-btn-for" style="flex:2" onclick="if(window.PDV)PDV.writeAgree({billId:'bill-003',billTitle:'평행 형법 제3조 개정',voteWeight:247});toast('✅ 동의하였습니다. PDV에 기록됩니다.')">👍 동의하기</button>
+            <button class="b-btn-detail" onclick="showBillDetail('형법 개정')">상세</button>
+          </div>
+        </div>
+
+        <div class="bill-card" data-status="passed">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div class="bill-title">GDC 스테이킹 연 이자율 3% → 4% 상향 조정</div>
+            <span class="badge b-ok">✅ 가결 · 시행 중</span>
+          </div>
+          <div class="bill-meta"><span>경제</span><span>·</span><span>2026.04.15 의결</span><span>·</span><span>찬성 71%</span></div>
+          <div style="font-size:12px;color:var(--txt3)">상원 통과 · 2026.05.01부터 시행 · PDV 기록 완료</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 의결 참여 ════ -->
+  <div class="panel" id="p-vote">
+    <div class="ph">
+      <div class="ph-badge">의결 참여</div>
+      <div class="ph-title">현재 의결 진행 중인 안건</div>
+      <div class="ph-sub">무작위 배심원으로 선정된 경우 아래에서 투표합니다. GDC 투표권 비례로 행사됩니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="card" style="border:1.5px solid var(--vi);margin-bottom:14px">
+        <div class="card-hd"><span class="card-hd-t">🗳️ 배심원 선정 안내</span><span class="badge b-proc">선정됨</span></div>
+        <div class="card-bd">
+          <div style="font-size:13px;color:var(--txt2);line-height:1.8;margin-bottom:12px">
+            안건 <strong>「고팡 거래 수수료 0.2% → 0.15% 인하」</strong>의 배심원으로 무작위 선정됐습니다.<br>
+            귀하의 현재 투표권: <strong style="color:var(--vi)">247표</strong> (GDC 보유 180 + 거래량 67)
+          </div>
+          <div style="background:#f8f9fa;border-radius:9px;padding:14px;margin-bottom:14px">
+            <div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">찬성 측 핵심 논거</div>
+            <div style="font-size:13px;color:#374151;margin-bottom:10px">① 수수료 0.05%p 인하 시 연간 거래량 약 8% 증가 예상 (탄력성 분석)<br>② GDC 생태계 확장으로 장기적 수익 구조 강화<br>③ 경쟁 플랫폼 대비 수수료 경쟁력 확보</div>
+            <div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">반대 측 핵심 논거</div>
+            <div style="font-size:13px;color:#374151">① 인프라 운영비 충당에 차질 발생 우려<br>② 현 시점 유동성 비율 고려 시 시기상조<br>③ 추가 분석 후 재논의 필요</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button style="flex:3;padding:12px;border-radius:9px;background:var(--vi);color:#fff;font-size:14px;font-weight:800;border:none;cursor:pointer" onclick="submitVote('찬성')">✓ 찬성 (247표 행사)</button>
+            <button style="flex:2;padding:12px;border-radius:9px;background:transparent;border:1.5px solid var(--border);color:#374151;font-size:14px;font-weight:700;cursor:pointer" onclick="submitVote('반대')">✗ 반대</button>
+            <button style="flex:1;padding:12px;border-radius:9px;background:transparent;border:1.5px solid var(--border);color:var(--txt3);font-size:14px;cursor:pointer" onclick="submitVote('기권')">— 기권</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 나의 투표권 ════ -->
+  <div class="panel" id="p-myvote">
+    <div class="ph">
+      <div class="ph-badge">나의 투표권</div>
+      <div class="ph-title">GDC 기반 투표권 현황</div>
+      <div class="ph-sub">GDC 보유량과 거래량에 비례하여 투표권이 산정됩니다. 최소 1표, 최대 1,000표.</div>
+    </div>
+    <div class="panel-body">
+      <div class="gdc-vote-card">
+        <div class="gdc-vote-label">현재 나의 투표권</div>
+        <div class="gdc-vote-power">247 <span style="font-size:16px;font-weight:500;color:#c4b5fd">표</span></div>
+        <div style="font-size:12px;color:#c4b5fd;margin-top:4px">최대 1,000표 중 24.7% 수준</div>
+        <div class="gdc-vote-bars">
+          <div class="gdc-vote-bar-row">
+            <span style="width:80px">GDC 보유</span>
+            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:72%"></div></div>
+            <span>180표</span>
+          </div>
+          <div class="gdc-vote-bar-row">
+            <span style="width:80px">거래량</span>
+            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:27%"></div></div>
+            <span>67표</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">📊 투표권 산정 기준</span></div>
+        <div class="card-bd">
+          <table class="data-table">
+            <thead><tr><th>항목</th><th>기준</th><th>나의 현황</th><th>투표권</th></tr></thead>
+            <tbody>
+              <tr><td>기본</td><td>고팡 시민 누구나</td><td>인증 완료</td><td>1표</td></tr>
+              <tr><td>GDC 보유량</td><td>보유 GDC × 0.1</td><td>1,800 GDC</td><td>180표</td></tr>
+              <tr><td>GDC 거래량</td><td>월 거래량 × 0.05</td><td>1,340 GDC/월</td><td>67표</td></tr>
+              <tr><td><strong>합계</strong></td><td>최대 1,000표 상한</td><td>—</td><td><strong>247표</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">🗳️ 최근 투표 이력 (PDV)</span></div>
+        <div class="card-bd">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+            <span>GDC 스테이킹 이자율 상향 조정</span><span style="color:var(--vi);font-weight:700">찬성 (247표)</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px">
+            <span>평행 민법 제7조 개정</span><span style="color:var(--txt3);font-weight:700">기권</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 하원 ════ -->
+  <div class="panel" id="p-lower">
+    <div class="ph">
+      <div class="ph-badge">하원</div>
+      <div class="ph-title">하원 — GDC 가중 투표 의회</div>
+      <div class="ph-sub">GDC 기여에 비례한 투표권(1~1,000표)으로 구성됩니다. 안건 발의·공방·의결을 처리합니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="stat-grid" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-val">3,847</div><div class="stat-lbl">등록 하원 의원</div><div class="stat-sub">GDC 보유 시민 전원</div></div>
+        <div class="stat-card"><div class="stat-val">12</div><div class="stat-lbl">이번 달 의결 완료</div><div class="stat-sub">가결 8건 · 부결 4건</div></div>
+        <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">현재 의결 진행 중</div><div class="stat-sub">잔여 기간 1~7일</div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">투표권 분포</span></div>
+        <div class="card-bd">
+          <table class="data-table">
+            <thead><tr><th>구간</th><th>시민 수</th><th>비율</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>1~10표</td><td>2,841명</td><td>73.8%</td><td>일반 시민</td></tr>
+              <tr><td>11~100표</td><td>712명</td><td>18.5%</td><td>중간 기여자</td></tr>
+              <tr><td>101~500표</td><td>248명</td><td>6.4%</td><td>고기여자</td></tr>
+              <tr><td>501~1,000표</td><td>46명</td><td>1.2%</td><td>최고 기여자</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 상원 ════ -->
+  <div class="panel" id="p-upper">
+    <div class="ph">
+      <div class="ph-badge">상원</div>
+      <div class="ph-title">상원 — 1인 1표 집행부</div>
+      <div class="ph-sub">1인 1표로 선출된 집행부입니다. 하원 가결 안건에 거부권을 행사하여 대자본의 독주를 견제합니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="card" style="border-left:3px solid var(--vi);margin-bottom:14px">
+        <div class="card-hd"><span class="card-hd-t">⚖️ 상원의 역할</span></div>
+        <div class="card-bd" style="font-size:13px;color:var(--txt2);line-height:1.8">
+          상원은 현실의 상원·원로원·헌법재판소를 합친 기능을 수행합니다.<br>
+          <strong>① 거부권:</strong> 하원 가결 안건이 GDC 소수의 독주라고 판단할 경우 거부권을 행사합니다.<br>
+          <strong>② 재의 요청:</strong> 거부 시 수정 의견과 함께 재상정을 요청할 수 있습니다.<br>
+          <strong>③ 헌법 수호:</strong> 평행 헌법에 위배되는 안건은 즉시 거부합니다.
+        </div>
+      </div>
+      <div class="stat-grid" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">상원 의원 수</div><div class="stat-sub">1인 1표로 선출</div></div>
+        <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">이번 달 거부권 행사</div><div class="stat-sub">재상정 2건 · 폐기 1건</div></div>
+        <div class="stat-card"><div class="stat-val">2026.12</div><div class="stat-lbl">다음 상원 선거</div><div class="stat-sub">2년 임기</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 평행 헌법 & 법률 ════ -->
+  <div class="panel" id="p-law">
+    <div class="ph">
+      <div class="ph-badge">평행 법률</div>
+      <div class="ph-title">고팡 평행 헌법 & 법률 체계</div>
+      <div class="ph-sub">현실 세계의 헌법·법률에 대응하는 고팡 전용 규범입니다. 의결로만 변경됩니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-hd"><span class="card-hd-t">📜 평행 법률 체계</span></div>
+        <div class="card-bd">
+          <table class="data-table">
+            <thead><tr><th>고팡 명칭</th><th>현실 대응</th><th>최종 개정</th><th>조항 수</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>평행 헌법</td><td>대한민국 헌법</td><td>2026.04.01</td><td>32조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 형법</td><td>형법</td><td>2026.05.15</td><td>87조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 민법</td><td>민법</td><td>2026.03.10</td><td>124조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 상법</td><td>상법</td><td>2026.02.20</td><td>56조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 세법</td><td>국세기본법·부가가치세법</td><td>2026.05.01</td><td>43조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 행정법</td><td>행정 절차법</td><td>2026.01.15</td><td>29조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>평행 가사법</td><td>가사 소송법</td><td>—</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 통계 & 감사 ════ -->
+  <div class="panel" id="p-stats">
+    <div class="ph">
+      <div class="ph-badge">통계</div>
+      <div class="ph-title">의결 통계 & OpenHash 감사</div>
+      <div class="ph-sub">모든 의결 이력과 데이터 무결성을 관리합니다.</div>
+    </div>
+    <div class="panel-body">
+      <div class="stat-grid" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-val">147</div><div class="stat-lbl">총 누적 의결 건수</div><div class="stat-sub">가결 98 · 부결 49</div></div>
+        <div class="stat-card"><div class="stat-val">67.3%</div><div class="stat-lbl">평균 투표 참여율</div><div class="stat-sub">목표 60% 초과</div></div>
+        <div class="stat-card"><div class="stat-val">0건</div><div class="stat-lbl">무결성 이상 탐지</div><div class="stat-sub">OpenHash 정상</div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-t">🔐 OpenHash 무결성 검증</span><span class="badge b-ok">정상</span></div>
+        <div class="card-bd">
+          <table class="data-table">
+            <thead><tr><th>검증 시각</th><th>의결 레코드</th><th>해시 일치</th><th>이상 탐지</th><th>결과</th></tr></thead>
+            <tbody>
+              <tr><td>2026.05.31 14:00</td><td>147건</td><td>147건</td><td>0</td><td><span class="badge b-ok">정상</span></td></tr>
+              <tr><td>2026.05.31 08:00</td><td>146건</td><td>146건</td><td>0</td><td><span class="badge b-ok">정상</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- 모달 -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-title"><span id="modal-ttl">안건 상세</span><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TITLES = {
+  home:'홈', chat:'AI 민주주의 상담', propose:'안건 제안',
+  bills:'안건 목록', vote:'의결 참여', myvote:'나의 투표권 (GDC)',
+  lower:'하원 (GDC 가중 투표)', upper:'상원 (1인 1표 집행부)',
+  law:'평행 헌법 & 법률', stats:'의결 통계 & 감사'
+};
+function show(id, btn) {
+  document.querySelectorAll('.panel,.chat-panel').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('p-' + id);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('topbar-title').textContent = TITLES[id] || '';
+}
+
+/* AI 채팅 */
+const SYS = `당신은 K-Democracy AI입니다. 고팡 AI 생태계의 직접 민주주의 플랫폼에서 운영됩니다.
+
+핵심 역할:
+1. 안건 제안 도움 — 배경·근거·예상 반대 논거 작성 지원
+2. 찬반 논지 분석 — AI가 양측 핵심 논거를 요약 제공
+3. 평행 법률 조회 — 평행 헌법·형법·민법 등 조항 안내
+4. 투표권 안내 — GDC 보유·거래량 기반 투표권 산정 설명
+5. DAWN 철학 안내 — Democracy is All We Need
+
+K-Democracy 구조:
+- 하원: GDC 기여 비례 1~1,000표
+- 상원: 1인 1표 선출 집행부 (거부권 보유)
+- 안건 → 1,000표 동의 → 심사·공방 → 무작위 배심 의결 → 상원 검토 → 평행 법률 반영
+
+답변은 쉽고 명확하게, 다음 행동을 항상 안내합니다.`;
+
+let hist = [];
+async function chatSend() {
+  const inp = document.getElementById('chat-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = ''; inp.style.height = 'auto';
+  addBubble(msg, 'user');
+  hist.push({ role: 'user', content: msg });
+  const btn = document.getElementById('chat-send-btn');
+  btn.disabled = true;
+  const tid = addBubble('…', 'ai');
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYS, messages: hist.slice(-10) })
+    });
+    const d = await r.json();
+    const txt = d.content?.find(c => c.type === 'text')?.text || '잠시 후 다시 시도해 주세요.';
+    document.getElementById(tid)?.remove();
+    addBubble(txt, 'ai');
+    hist.push({ role: 'assistant', content: txt });
+    if (window.PDV) PDV.writeConsult({ userMsg: msg.slice(0,200), aiMsg: txt.slice(0,300) });
+  } catch {
+    document.getElementById(tid)?.remove();
+    addBubble('오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', 'ai');
+  }
+  btn.disabled = false;
+}
+let bc = 0;
+function addBubble(text, type) {
+  const id = 'bb' + (bc++);
+  const body = document.getElementById('chat-body');
+  const d = document.createElement('div');
+  d.id = id; d.className = type === 'user' ? 'b-user' : 'b-ai';
+  d.innerHTML = text.replace(/\n/g, '<br>');
+  body.appendChild(d); body.scrollTop = 99999;
+  return id;
+}
+function qs(s) { show('chat', null); setTimeout(() => { document.getElementById('chat-input').value = s; chatSend(); }, 80); }
+
+/* 안건 필터 */
+function filterBills(status, btn) {
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('#bills-list .bill-card').forEach(c => {
+    c.style.display = (status === 'all' || c.dataset.status === status) ? '' : 'none';
+  });
+}
+
+/* 투표 */
+function castVote(btn, side) {
+  const billTitle = btn.closest('.bill-card')?.querySelector('.bill-title')?.textContent || '';
+  if (window.PDV) PDV.writeVote({ billId: 'bill-' + Date.now(), billTitle, side, voteWeight: 247 });
+  toast(`🗳️ ${side} 투표 완료. PDV에 기록됩니다.`);
+  btn.textContent = side === '찬성' ? '✓ 찬성 완료' : '✗ 반대 완료';
+  btn.style.opacity = '0.6'; btn.disabled = true;
+}
+function submitVote(side) {
+  if (window.PDV) PDV.writeVote({ billId: 'bill-jury-001', billTitle: '고팡 거래 수수료 0.2% → 0.15% 인하', side, voteWeight: 247 });
+  toast(`🗳️ ${side} 투표 (247표) 완료. PDV에 기록됩니다.`);
+}
+function submitBill() {
+  const title = document.getElementById('bill-title-input')?.value?.trim();
+  if (!title) { toast('⚠️ 안건 제목을 입력해 주세요.'); return; }
+  if (window.PDV) PDV.writePropose({ title, category: document.querySelector('.f-select')?.value || '', background: document.getElementById('bill-bg-input')?.value || '' });
+  toast('✅ 안건이 게재됐습니다. 1,000표 동의를 확보하면 심사 게시판에 상정됩니다. PDV에 기록됩니다.');
+}
+function showBillDetail(name) {
+  document.getElementById('modal-ttl').textContent = '안건 상세 — ' + name;
+  document.getElementById('modal-body').innerHTML = `<div style="font-size:13px;color:var(--txt2);line-height:1.8">
+    <div style="font-weight:700;margin-bottom:8px">안건 전문</div>
+    <p style="margin-bottom:12px">「${name}」에 관한 상세 내용이 여기에 표시됩니다. 제안 배경, 찬반 공방 내역, 현재 투표 현황, PDV 기록 링크 등을 확인할 수 있습니다.</p>
+    <div style="background:var(--vi-bg);border-radius:8px;padding:10px;font-size:12px;color:var(--vi-dk);border:1px solid var(--vi-bd)">🔐 이 안건의 모든 처리 기록은 PDV에 저장되고 OpenHash로 앵커링됩니다.</div>
+  </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+const ctx = new URLSearchParams(location.search).get('ctx');
+if (ctx) { show('chat', null); setTimeout(() => qs(decodeURIComponent(ctx)), 400); }
+</script>
+</body>
+</html>
