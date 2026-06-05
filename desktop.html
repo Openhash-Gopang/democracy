@@ -875,6 +875,7 @@ window.PDV = window.PDV || {
   .ai-status-dot.loading{background:#f59e0b;animation:sdot 1.2s infinite}
   .ai-status-dot.error{background:#ef4444;animation:none}
   @keyframes sdot{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes prp-spin{to{transform:rotate(360deg)}}
   .ai-result-close{background:none;border:none;cursor:pointer;color:#94a3b8;font-size:18px;line-height:1}
   .ai-result-close:hover{color:#374151}
   .ai-tbl-row{display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid #f1f5f9;min-height:40px}
@@ -1452,18 +1453,58 @@ async function generateBillAI() {
   const idea = document.getElementById('bill-idea-input')?.value?.trim();
   if (!idea) { toast('⚠️ 제안 내용을 먼저 입력해 주세요.'); return; }
 
-  const btn    = document.getElementById('ai-gen-btn');
+  const btn        = document.getElementById('ai-gen-btn');
   const resultCard = document.getElementById('ai-result-card');
   const resultBody = document.getElementById('ai-result-body');
-  const dot    = document.getElementById('ai-status-dot');
-  const label  = document.getElementById('ai-result-hd-label');
+  const dot        = document.getElementById('ai-status-dot');
+  const label      = document.getElementById('ai-result-hd-label');
+
+  // 진행 단계 메시지
+  const STEPS = [
+    { ms:    0, msg: '안건 내용을 분석하고 있습니다…' },
+    { ms: 1200, msg: '안건 분류 및 핵심 논점을 파악하고 있습니다…' },
+    { ms: 3000, msg: '제목과 요약을 작성하고 있습니다…' },
+    { ms: 5000, msg: '제안 배경과 근거를 구성하고 있습니다…' },
+    { ms: 7500, msg: '기대 효과를 분석하고 있습니다…' },
+    { ms: 9500, msg: '찬성 논거를 강화하고 있습니다…' },
+    { ms:11500, msg: '반대 논거와 대응 방안을 검토하고 있습니다…' },
+    { ms:14000, msg: '합리성 점수를 산정하고 있습니다…' },
+    { ms:17000, msg: '최종 검토 중입니다…' },
+  ];
+
+  function setStep(msg) {
+    if (label) label.textContent = msg;
+    resultBody.innerHTML =
+      '<div style="padding:32px 24px">' +
+        '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">' +
+          '<div style="width:32px;height:32px;border:2.5px solid #e2e8f0;border-top-color:#3ecf8e;border-radius:50%;animation:prp-spin .8s linear infinite;flex-shrink:0"></div>' +
+          '<div style="font-size:14px;color:#374151;font-weight:500">' + msg + '</div>' +
+        '</div>' +
+        '<div style="height:4px;background:#f1f5f9;border-radius:2px;overflow:hidden">' +
+          '<div id="prp-progress" style="height:100%;background:#3ecf8e;border-radius:2px;width:0%;transition:width .6s ease"></div>' +
+        '</div>' +
+      '</div>';
+  }
 
   btn.disabled = true;
   btn.textContent = '생성 중…';
   resultCard.classList.add('visible');
-  if (dot)   { dot.classList.add('loading'); }
-  if (label) { label.textContent = 'AI 작성 중…'; }
-  resultBody.innerHTML = '<div style="padding:40px;text-align:center;color:#94a3b8;font-size:14px">DeepSeek이 안건을 작성하고 있습니다…</div>';
+  if (dot) { dot.classList.add('loading'); }
+  setStep(STEPS[0].msg);
+
+  // 프로그레스바 + 단계 메시지 타이머
+  var stepTimers = [];
+  STEPS.forEach(function(s, i) {
+    var t = setTimeout(function() {
+      if (label) label.textContent = s.msg;
+      var progress = document.getElementById('prp-progress');
+      if (progress) progress.style.width = Math.min(((i+1)/STEPS.length)*90, 90) + '%';
+      // 메시지만 교체 (스피너 유지)
+      var msgEl = resultBody.querySelector('div[style*="font-size:14px"]');
+      if (msgEl) msgEl.textContent = s.msg;
+    }, s.ms);
+    stepTimers.push(t);
+  });
 
   const attachNote = attachedFiles.length ? '\n\n첨부 파일: ' + attachedFiles.map(function(f){return f.name;}).join(', ') : '';
   const userMsg = '사용자 아이디어:\n' + idea + attachNote;
@@ -1490,10 +1531,22 @@ async function generateBillAI() {
     const raw  = data.choices?.[0]?.message?.content || '';
     const jsonStr = raw.replace(/^```json|^```|```$/gm, '').trim();
     generatedBill = JSON.parse(jsonStr);
-    renderAIResult(generatedBill);
-    if (dot)   { dot.classList.remove('loading'); dot.style.background = '#3ecf8e'; }
-    if (label) { label.textContent = 'AI 작성 완료'; }
+
+    // 타이머 모두 취소
+    stepTimers.forEach(function(t){ clearTimeout(t); });
+
+    // 프로그레스 100%
+    var progress = document.getElementById('prp-progress');
+    if (progress) { progress.style.width = '100%'; progress.style.background = '#3ecf8e'; }
+
+    setTimeout(function() {
+      renderAIResult(generatedBill);
+      if (dot)   { dot.classList.remove('loading'); dot.style.background = '#3ecf8e'; }
+      if (label) { label.textContent = 'AI 작성 완료'; }
+    }, 300);
+
   } catch(e) {
+    stepTimers.forEach(function(t){ clearTimeout(t); });
     resultBody.innerHTML = '<div style="padding:24px 16px;color:#dc2626;font-size:13.5px">⚠️ 생성 중 오류가 발생했습니다.<br><small style="color:#94a3b8;font-size:12px">' + e.message + '</small></div>';
     if (dot)   { dot.classList.remove('loading'); dot.style.background = '#ef4444'; }
     if (label) { label.textContent = '오류 발생'; }
