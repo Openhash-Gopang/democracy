@@ -690,6 +690,96 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
   </div>
 
   <!-- ════ 안건 제안 ════ -->
+  <!-- 안건 제안 패널 CSS -->
+  <style>
+  .propose-input-wrap{position:relative;margin-bottom:0}
+  .propose-textarea{
+    width:100%;min-height:130px;padding:14px 16px 48px;
+    font-family:var(--sans,inherit);font-size:14px;line-height:1.75;
+    border:1.5px solid var(--border,#e2e8f0);border-radius:10px;
+    resize:vertical;outline:none;transition:border-color .15s;
+    background:#fff;color:var(--txt1,#0f172a);
+  }
+  .propose-textarea:focus{border-color:var(--vi,#7c3aed)}
+  .propose-input-icons{
+    position:absolute;bottom:10px;right:10px;
+    display:flex;gap:6px;align-items:center;
+  }
+  .p-icon-btn{
+    width:32px;height:32px;border-radius:7px;border:1px solid var(--border,#e2e8f0);
+    background:#f8fafc;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all .15s;color:var(--txt3,#64748b);font-size:15px;
+  }
+  .p-icon-btn:hover{background:var(--vi-bg,#f5f3ff);border-color:var(--vi,#7c3aed);color:var(--vi,#7c3aed)}
+  .p-icon-btn.send{
+    width:auto;padding:0 14px;gap:6px;font-size:13px;font-weight:600;
+    background:var(--vi,#7c3aed);color:#fff;border-color:var(--vi,#7c3aed);
+  }
+  .p-icon-btn.send:hover{background:var(--vi-dk,#6d28d9)}
+  .p-icon-btn.send:disabled{opacity:.5;cursor:not-allowed}
+
+  /* AI 생성 결과 카드 */
+  .ai-result-card{
+    display:none;background:#fff;border:1.5px solid var(--vi-bd,#ddd6fe);
+    border-radius:12px;overflow:hidden;margin-top:0;
+  }
+  .ai-result-card.visible{display:block}
+  .ai-result-header{
+    background:linear-gradient(90deg,var(--vi-bg,#f5f3ff),#fff);
+    padding:12px 18px;border-bottom:1px solid var(--vi-bd,#ddd6fe);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .ai-result-title{font-size:12px;font-weight:700;color:var(--vi-dk,#5b21b6);letter-spacing:.5px;text-transform:uppercase}
+  .ai-generating{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--vi,#7c3aed)}
+  .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--vi,#7c3aed);animation:ai-pulse 1.2s infinite}
+  .ai-dot:nth-child(2){animation-delay:.2s}
+  .ai-dot:nth-child(3){animation-delay:.4s}
+  @keyframes ai-pulse{0%,80%,100%{opacity:.3}40%{opacity:1}}
+  .ai-result-body{padding:20px 22px;display:flex;flex-direction:column;gap:16px}
+  .ai-field{display:flex;flex-direction:column;gap:6px}
+  .ai-field-label{
+    font-size:11px;font-weight:700;color:var(--txt3,#64748b);
+    letter-spacing:1px;text-transform:uppercase;
+  }
+  .ai-field-value{
+    font-size:14px;color:var(--txt1,#0f172a);line-height:1.8;
+    padding:10px 14px;background:var(--sur2,#f8fafc);
+    border-radius:8px;border:1px solid var(--border,#e2e8f0);
+    white-space:pre-wrap;
+  }
+  .ai-field-value.title-val{font-size:16px;font-weight:700;background:var(--vi-bg,#f5f3ff);border-color:var(--vi-bd,#ddd6fe)}
+  .ai-tag{
+    display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;
+    font-size:11px;font-weight:600;background:var(--vi-lt,#ede9fe);color:var(--vi-dk,#5b21b6);
+    border:1px solid var(--vi-bd,#ddd6fe);
+  }
+  .ai-result-actions{
+    padding:14px 22px;border-top:1px solid var(--border,#e2e8f0);
+    display:flex;gap:10px;background:#fafaf8;
+  }
+  .ai-btn-edit{
+    flex:1;padding:10px;border-radius:8px;border:1.5px solid var(--border,#e2e8f0);
+    background:#fff;font-size:13px;font-weight:600;color:var(--txt2,#475569);
+    cursor:pointer;transition:all .15s;
+  }
+  .ai-btn-edit:hover{border-color:var(--vi,#7c3aed);color:var(--vi,#7c3aed)}
+  .ai-btn-submit{
+    flex:2;padding:10px;border-radius:8px;border:none;
+    background:var(--vi,#7c3aed);color:#fff;font-size:13px;font-weight:700;
+    cursor:pointer;transition:background .15s;
+  }
+  .ai-btn-submit:hover{background:var(--vi-dk,#6d28d9)}
+
+  /* 파일 첨부 미리보기 */
+  .attach-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .attach-item{
+    display:flex;align-items:center;gap:6px;padding:4px 10px;
+    background:var(--sur2,#f8fafc);border:1px solid var(--border,#e2e8f0);
+    border-radius:6px;font-size:12px;color:var(--txt2,#475569);
+  }
+  .attach-item button{background:none;border:none;cursor:pointer;color:var(--txt3);font-size:14px;line-height:1;padding:0 2px}
+  </style>
+
   <div class="panel" id="p-propose">
     <div class="ph">
       <div class="ph-badge">안건 제안</div>
@@ -697,46 +787,94 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       <div class="ph-sub">고팡 생태계의 구축과 운영에 관한 모든 사항을 제안할 수 있습니다. 1,000표 동의를 확보하면 심사 게시판에 상정됩니다.</div>
     </div>
     <div class="panel-body">
-      <div class="card">
-        <div class="card-hd"><span class="card-hd-t">📝 안건 작성</span></div>
-        <div class="card-bd">
-          <div class="f-group"><label class="f-label">안건 분류</label>
-            <select class="f-select">
+
+      <!-- 입력 카드 -->
+      <div class="card" id="propose-input-card">
+        <div class="card-hd"><span class="card-hd-t">📝 안건 내용 입력</span></div>
+        <div class="card-bd" style="display:flex;flex-direction:column;gap:14px">
+
+          <div class="f-group" style="margin-bottom:0">
+            <label class="f-label">안건 분류</label>
+            <select class="f-select" id="bill-category">
               <option>인프라 (서버·네트워크·칩)</option>
               <option>경제 (수수료·GDC·분배)</option>
-              <option>법률 (평행 헌법·형법·민법)</option>
+              <option>법률 (원칙·민사규칙·형사규칙)</option>
               <option>거버넌스 (의결 규칙·투표권)</option>
               <option>보안 (인증·암호화)</option>
               <option>기타</option>
             </select>
           </div>
-          <div class="f-group"><label class="f-label">안건 제목</label>
-            <input class="f-input" placeholder="예: 고팡 거래 수수료를 0.2%에서 0.15%로 인하 제안" id="bill-title-input">
+
+          <div class="f-group" style="margin-bottom:0">
+            <label class="f-label">제안 내용 <span style="font-weight:400;color:var(--txt3);font-size:11px">— 핵심 아이디어만 간략히 입력하세요. AI가 완성합니다.</span></label>
+            <div class="propose-input-wrap">
+              <textarea class="propose-textarea" id="bill-idea-input"
+                placeholder="예: 고팡 거래 수수료를 현행보다 낮추고 싶다. 사용자 부담을 줄이기 위해서."></textarea>
+              <!-- 첨부 파일 미리보기 -->
+              <div class="attach-preview" id="attach-preview"></div>
+              <!-- 아이콘 바 -->
+              <div class="propose-input-icons">
+                <!-- 파일 첨부 -->
+                <label class="p-icon-btn" title="파일 첨부" style="cursor:pointer">
+                  📎
+                  <input type="file" id="bill-file-input" multiple accept="image/*,.pdf,.txt,.md,.doc,.docx"
+                    style="display:none" onchange="handleAttach(this)">
+                </label>
+                <!-- 카메라 -->
+                <label class="p-icon-btn" title="카메라로 촬영" style="cursor:pointer">
+                  📷
+                  <input type="file" id="bill-camera-input" accept="image/*" capture="environment"
+                    style="display:none" onchange="handleAttach(this)">
+                </label>
+                <!-- 마이크 -->
+                <button class="p-icon-btn" id="mic-btn" title="음성 입력" onclick="toggleMic()">🎙️</button>
+                <!-- AI 완성 버튼 -->
+                <button class="p-icon-btn send" id="ai-gen-btn" onclick="generateBillAI()" title="AI로 안건 완성">
+                  ✨ AI 완성
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="f-group"><label class="f-label">제안 배경 및 근거</label>
-            <textarea class="f-textarea" placeholder="이 안건을 제안하는 이유와 기대 효과를 상세히 작성하세요." id="bill-bg-input" style="min-height:120px"></textarea>
+
+          <div style="background:var(--vi-bg);border-radius:8px;padding:10px;font-size:12px;color:var(--txt2);border:1px solid var(--vi-bd)">
+            ✨ 제안 내용을 입력하고 <strong>AI 완성</strong>을 누르면 DeepSeek이 제목·요약·본문·찬반 논거를 자동 작성합니다.
           </div>
-          <div class="f-group"><label class="f-label">예상 반대 논거 및 대응</label>
-            <textarea class="f-textarea" placeholder="예상되는 반대 의견과 그에 대한 대응을 미리 작성하면 심사 통과 가능성이 높아집니다." id="bill-counter-input"></textarea>
-          </div>
-          <div style="background:var(--vi-bg);border-radius:8px;padding:10px;font-size:12px;color:var(--txt2);margin-bottom:12px;border:1px solid var(--vi-bd)">
-            🗳️ 제안 즉시 게시판에 공개됩니다. <strong>1,000표 동의</strong>를 확보해야 심사 게시판에 상정됩니다. 모든 제안 기록은 PDV에 저장됩니다.
-          </div>
-          <button class="f-btn-full" onclick="submitBill()">안건 게재하기</button>
         </div>
       </div>
-      <div class="card">
+
+      <!-- AI 생성 결과 카드 -->
+      <div class="ai-result-card" id="ai-result-card">
+        <div class="ai-result-header">
+          <div class="ai-result-title">🤖 DeepSeek AI 작성 결과</div>
+          <div class="ai-generating" id="ai-generating-indicator" style="display:none">
+            <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+            <span>작성 중...</span>
+          </div>
+          <button onclick="resetPropose()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--txt3);line-height:1">×</button>
+        </div>
+        <div class="ai-result-body" id="ai-result-body">
+          <!-- AI 결과가 여기에 채워짐 -->
+        </div>
+        <div class="ai-result-actions">
+          <button class="ai-btn-edit" onclick="resetPropose()">↩ 다시 작성</button>
+          <button class="ai-btn-submit" onclick="submitBill()">🗳️ 안건 게재하기</button>
+        </div>
+      </div>
+
+      <!-- 가이드 카드 -->
+      <div class="card" id="propose-guide-card">
         <div class="card-hd"><span class="card-hd-t">💡 제안 가이드</span></div>
         <div class="card-bd" style="font-size:13px;color:var(--txt2);line-height:1.8">
           <strong>제안 가능한 안건 예시:</strong><br>
           · AI 서버 주요 칩을 H200 → 화웨이 어센드 910C로 변경<br>
           · 각 지역별 소규모 서버 클러스터 설립<br>
-          · 고팡 거래 수수료 0.2% → 0.15% 인하<br>
+          · 고팡 거래 수수료 인하<br>
           · 회계 방식 변경 (IFRS 기반 채택)<br>
           · GDC 최대 투표권 상한을 1,000표 → 500표로 조정<br>
-          · 평행 형법 제3조 개정 (디지털 사기 처벌 강화)
+          · 평행 형사규칙 제3조 개정 (디지털 사기 처벌 강화)
         </div>
       </div>
+
     </div>
   </div>
 
@@ -1131,11 +1269,218 @@ function submitVote(side) {
   if (window.PDV) PDV.writeVote({ billId: 'bill-jury-001', billTitle: '고팡 거래 수수료 0.2% → 0.15% 인하', side, voteWeight: 247 });
   toast(`🗳️ ${side} 투표 (247표) 완료. PDV에 기록됩니다.`);
 }
+/* ── 안건 제안 AI 완성 ── */
+const DEEPSEEK_PROXY = 'https://gopang-proxy.tensor-city.workers.dev';
+const DEEPSEEK_MODEL = 'deepseek-chat'; // DeepSeek V3 (deepseek-chat = V3, V4 출시 시 교체)
+
+const BILL_SYSTEM_PROMPT = `당신은 고팡(Gopang) AI 평행 세계의 AI 민주주의 안건 작성 전문가입니다.
+사용자가 제시한 핵심 아이디어를 바탕으로, K-Democracy 심사 기준에 최적화된 완전한 안건 문서를 작성합니다.
+
+【출력 규칙】
+반드시 아래 JSON 형식으로만 응답하십시오. 다른 텍스트나 마크다운 코드블록 없이 순수 JSON만 출력합니다.
+
+{
+  "title": "안건 제목 (30자 이내, 핵심 변경사항과 방향을 명확히)",
+  "summary": "안건 요약 (2~3문장, 누가 무엇을 왜 변경하는지)",
+  "category_tag": "분류 태그 (경제/인프라/법률/거버넌스/보안/기타 중 1개)",
+  "background": "제안 배경 및 근거 (현재 문제점, 변경 필요성, 기대 효과를 상세히. 300~500자)",
+  "expected_effect": "기대 효과 (구체적이고 측정 가능한 효과 3가지를 번호 목록으로)",
+  "support_arguments": "찬성 논거 (심사 통과 가능성을 높이는 핵심 찬성 논거 3가지를 번호 목록으로)",
+  "counter_arguments": "예상 반대 논거 및 대응 (예상되는 반대 의견 2~3가지와 각각에 대한 대응방안)",
+  "rationality_score": "제안 합리성 점수 (1~10점, 소수점 없음)",
+  "rationality_reason": "합리성 점수 근거 (1~2문장)"
+}
+
+【작성 원칙】
+- 고팡의 핵심 가치(비영리, 오픈소스, 직접 민주주의, 데이터 주권)와의 부합성을 고려합니다.
+- 감정적 표현 대신 논리적·수치적 근거를 사용합니다.
+- 현실 세계의 법률과 충돌하지 않는 방향으로 작성합니다.
+- GDC, PDV, OpenHash, K-Law 등 고팡 시스템 용어를 적절히 활용합니다.`;
+
+// 음성 인식
+let mediaRecorder = null;
+let micActive = false;
+let attachedFiles = [];
+let generatedBill = null;
+
+function toggleMic() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    toast('⚠️ 이 브라우저는 음성 인식을 지원하지 않습니다.');
+    return;
+  }
+  const btn = document.getElementById('mic-btn');
+  if (micActive) {
+    if (window._sr) window._sr.stop();
+    micActive = false;
+    btn.style.background = '';
+    btn.style.color = '';
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  window._sr = new SR();
+  window._sr.lang = 'ko-KR';
+  window._sr.continuous = false;
+  window._sr.interimResults = false;
+  window._sr.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    const ta = document.getElementById('bill-idea-input');
+    ta.value = (ta.value ? ta.value + ' ' : '') + txt;
+  };
+  window._sr.onend = () => {
+    micActive = false;
+    btn.style.background = '';
+    btn.style.color = '';
+  };
+  window._sr.start();
+  micActive = true;
+  btn.style.background = '#ef4444';
+  btn.style.color = '#fff';
+}
+
+function handleAttach(input) {
+  const files = Array.from(input.files);
+  files.forEach(f => {
+    if (!attachedFiles.find(x => x.name === f.name)) attachedFiles.push(f);
+  });
+  renderAttachPreview();
+  input.value = '';
+}
+
+function renderAttachPreview() {
+  const wrap = document.getElementById('attach-preview');
+  wrap.innerHTML = attachedFiles.map((f, i) => `
+    <div class="attach-item">
+      ${f.type.startsWith('image/') ? '🖼️' : '📄'} ${f.name}
+      <button onclick="removeAttach(${i})">×</button>
+    </div>`).join('');
+}
+
+function removeAttach(i) {
+  attachedFiles.splice(i, 1);
+  renderAttachPreview();
+}
+
+async function generateBillAI() {
+  const idea = document.getElementById('bill-idea-input')?.value?.trim();
+  const category = document.getElementById('bill-category')?.value || '';
+  if (!idea) { toast('⚠️ 제안 내용을 먼저 입력해 주세요.'); return; }
+
+  const btn = document.getElementById('ai-gen-btn');
+  btn.disabled = true;
+  btn.textContent = '생성 중...';
+
+  // 결과 카드 표시
+  const resultCard = document.getElementById('ai-result-card');
+  const resultBody = document.getElementById('ai-result-body');
+  const indicator = document.getElementById('ai-generating-indicator');
+  resultCard.classList.add('visible');
+  indicator.style.display = 'flex';
+  resultBody.innerHTML = '<div style="text-align:center;padding:32px;color:var(--txt3);font-size:14px">DeepSeek이 안건을 작성하고 있습니다…</div>';
+  document.getElementById('propose-guide-card').style.display = 'none';
+
+  const userMsg = `안건 분류: ${category}
+
+사용자 아이디어:
+${idea}${attachedFiles.length ? '
+
+첨부 파일: ' + attachedFiles.map(f=>f.name).join(', ') : ''}`;
+
+  try {
+    const resp = await fetch(`${DEEPSEEK_PROXY}/v1/chat/completions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        max_tokens: 1500,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: BILL_SYSTEM_PROMPT },
+          { role: 'user', content: userMsg }
+        ]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.choices?.[0]?.message?.content || '';
+    // JSON 파싱 (코드블록 제거)
+    const jsonStr = raw.replace(/```json|```/g, '').trim();
+    generatedBill = JSON.parse(jsonStr);
+    renderAIResult(generatedBill, category);
+  } catch(e) {
+    resultBody.innerHTML = `<div style="padding:20px;color:#ef4444;font-size:14px">⚠️ AI 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.<br><small style="color:var(--txt3)">${e.message}</small></div>`;
+  }
+
+  indicator.style.display = 'none';
+  btn.disabled = false;
+  btn.textContent = '✨ AI 완성';
+}
+
+function renderAIResult(bill, category) {
+  const score = parseInt(bill.rationality_score) || 0;
+  const scoreColor = score >= 8 ? '#10b981' : score >= 5 ? '#f59e0b' : '#ef4444';
+  document.getElementById('ai-result-body').innerHTML = `
+    <div class="ai-field">
+      <div class="ai-field-label">📌 안건 제목</div>
+      <div class="ai-field-value title-val">${bill.title || ''}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="ai-tag">📂 ${category}</span>
+      <span class="ai-tag">🏷️ ${bill.category_tag || ''}</span>
+      <span class="ai-tag" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0">
+        합리성 <strong>${bill.rationality_score}</strong>/10
+      </span>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">📋 요약</div>
+      <div class="ai-field-value">${bill.summary || ''}</div>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">📖 제안 배경 및 근거</div>
+      <div class="ai-field-value">${bill.background || ''}</div>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">✅ 기대 효과</div>
+      <div class="ai-field-value">${bill.expected_effect || ''}</div>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">👍 찬성 논거</div>
+      <div class="ai-field-value">${bill.support_arguments || ''}</div>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">⚖️ 예상 반대 논거 및 대응</div>
+      <div class="ai-field-value">${bill.counter_arguments || ''}</div>
+    </div>
+    <div class="ai-field">
+      <div class="ai-field-label">📊 합리성 평가</div>
+      <div class="ai-field-value" style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:28px;font-weight:700;color:${scoreColor}">${bill.rationality_score}<span style="font-size:14px;color:var(--txt3)">/10</span></span>
+        <span style="font-size:13px;color:var(--txt2)">${bill.rationality_reason || ''}</span>
+      </div>
+    </div>`;
+}
+
+function resetPropose() {
+  document.getElementById('ai-result-card').classList.remove('visible');
+  document.getElementById('propose-guide-card').style.display = '';
+  generatedBill = null;
+}
+
 function submitBill() {
-  const title = document.getElementById('bill-title-input')?.value?.trim();
-  if (!title) { toast('⚠️ 안건 제목을 입력해 주세요.'); return; }
-  if (window.PDV) PDV.writePropose({ title, category: document.querySelector('.f-select')?.value || '', background: document.getElementById('bill-bg-input')?.value || '' });
+  const idea = document.getElementById('bill-idea-input')?.value?.trim();
+  const category = document.getElementById('bill-category')?.value || '';
+  const title = generatedBill?.title || idea || '(제목 없음)';
+  if (!idea) { toast('⚠️ 제안 내용을 먼저 입력해 주세요.'); return; }
+  if (window.PDV) PDV.writePropose({
+    title,
+    category,
+    background: generatedBill?.background || idea,
+    summary: generatedBill?.summary || '',
+    rationality: generatedBill?.rationality_score || ''
+  });
   toast('✅ 안건이 게재됐습니다. 1,000표 동의를 확보하면 심사 게시판에 상정됩니다. PDV에 기록됩니다.');
+  resetPropose();
+  document.getElementById('bill-idea-input').value = '';
+  attachedFiles = [];
+  renderAttachPreview();
 }
 function showBillDetail(name) {
   document.getElementById('modal-ttl').textContent = '안건 상세 — ' + name;
