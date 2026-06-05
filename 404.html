@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — 페이지를 찾을 수 없습니다 · K-Democracy</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{
+  background:#f8faf8;
+  font-family:'Noto Sans KR',-apple-system,sans-serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:24px;text-align:center;word-break:keep-all;
+}
+.code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(72px,15vw,120px);
+  font-weight:500;
+  color:#3ecf8e;
+  line-height:1;
+  margin-bottom:8px;
+  letter-spacing:-4px;
+}
+.title{
+  font-size:clamp(18px,4vw,24px);
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:12px;
+}
+.desc{
+  font-size:15px;
+  color:#64748b;
+  line-height:1.8;
+  max-width:400px;
+  margin-bottom:36px;
+}
+.links{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;
+  text-decoration:none;transition:all .15s;
+}
+.btn-primary{background:#3ecf8e;color:#fff;}
+.btn-primary:hover{background:#1a9e6a;}
+.btn-ghost{background:#fff;color:#334155;border:1px solid #e2e8f0;}
+.btn-ghost:hover{border-color:#3ecf8e;color:#1a9e6a;}
+.pdv-note{
+  margin-top:48px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:#94a3b8;
+  border:1px solid #e2e8f0;border-radius:8px;
+  padding:12px 20px;background:#fff;
+}
+</style>
+</head>
+<body>
+  <div class="code">404</div>
+  <div class="title">페이지를 찾을 수 없습니다</div>
+  <p class="desc">
+    요청하신 페이지가 존재하지 않거나 이동되었습니다.<br>
+    OpenHash에서 해당 경로의 기록을 확인했으나 앵커링된 데이터가 없습니다.
+  </p>
+  <div class="links">
+    <a href="/desktop.html" class="btn btn-primary">🏛 K-Democracy 홈</a>
+    <a href="/gopang_laws.html" class="btn btn-ghost">📜 평행 법전</a>
+    <a href="https://gopang.net" class="btn btn-ghost">🌐 gopang.net</a>
+  </div>
+  <div class="pdv-note">
+    PDV 기록 없음 · OpenHash 앵커 없음 · K-Law 감지 없음
+  </div>
+</body>
+</html>

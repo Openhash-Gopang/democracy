@@ -87,7 +87,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--vi-bg);border:1px solid var(--vi-bd);color:var(--vi-dk);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;margin-bottom:24px}
 .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--vi);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.hero h1{font-size:clamp(26px,5vw,52px);font-weight:900;line-height:1.13;letter-spacing:-1.5px;color:#0f172a;margin-bottom:20px}
+.hero h1{font-size:clamp(26px,5vw,52px);font-weight:900;line-height:1.38;letter-spacing:-1.5px;color:#0f172a;margin-bottom:20px}
 .hero h1 .hl{background:linear-gradient(135deg,var(--vi) 0%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:clamp(14px,2vw,18px);color:var(--txt2);max-width:620px;margin:0 auto 36px;line-height:1.7}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:56px}
@@ -341,12 +341,12 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 
   <button class="sb-item" onclick="show('lower',this)">
     <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-    <span class="sb-lbl">하원 (GDC 가중 투표)</span>
+    <span class="sb-lbl">GDC 가중 투표 의회</span>
   </button>
 
   <button class="sb-item" onclick="show('upper',this)">
     <span class="sb-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>
-    <span class="sb-lbl">상원 (1인 1표 집행부)</span>
+    <span class="sb-lbl">1인 1표 집행부</span>
   </button>
 
   <button class="sb-item" onclick="show('law',this)">
@@ -393,10 +393,9 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
         <span class="hero-badge-dot"></span>
         고팡 AI 생태계 직접 민주주의 · DAWN
       </div>
-      <h1>고팡의 주인은<br><span class="hl">고팡 시민 모두입니다</span></h1>
+      <h1>고팡의 주인은<br><span class="hl">고팡 사용자 모두입니다</span></h1>
       <p class="hero-sub">
-        누구나 안건을 제안하고, GDC 기여에 비례한 투표권으로 결정하며,
-        1인 1표 상원이 대자본의 독주를 견제합니다
+        고팡은 비영리 오픈소스 활동이며, 사용자가 곧 주주이자 임직원입니다.
       </p>
       <div class="hero-cta">
         <button class="btn-hero" onclick="show('propose',null)">
@@ -410,7 +409,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       <div class="hero-stats">
         <div class="hstat"><span class="hstat-num">∞<span class="u"></span></span><span class="hstat-lbl">누구나 안건 제안</span></div>
         <div class="hstat"><span class="hstat-num">1,000<span class="u">표</span></span><span class="hstat-lbl">1인 최대 투표권</span></div>
-        <div class="hstat"><span class="hstat-num">2<span class="u">원</span></span><span class="hstat-lbl">하원 + 상원 이원 구조</span></div>
+        <div class="hstat"><span class="hstat-num">2<span class="u">원</span></span><span class="hstat-lbl">GDC 의회 + 집행부 이원 구조</span></div>
         <div class="hstat"><span class="hstat-num">100<span class="u">%</span></span><span class="hstat-lbl">PDV 의결 투명 기록</span></div>
       </div>
     </div>
@@ -419,8 +418,16 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     <div class="compare-sec" id="compare-anchor">
       <div class="inner">
         <div class="sec-badge">기존 민주주의 vs K-Democracy</div>
-        <h2 class="sec-title">AI 평행 민주주의는 이렇게 다릅니다</h2>
-        <p class="sec-sub">대의 민주주의의 한계를 극복하는 고팡의 직접 민주주의 설계입니다.</p>
+        <h2 class="sec-title">AI 평행 세계의 민주주의는 조금 다릅니다</h2>
+        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:660px;line-height:2">
+          <li>🔹 고팡은 현실 세계의 AI 평행 세계입니다.</li>
+          <li>🔹 현실에 존재하는 모든 기관, 사물, 사람의 AI 쌍둥이 세계입니다.</li>
+          <li>🔹 고팡의 운영은 현실 민주주의의 AI 쌍둥이에 의합니다. 즉, <strong>AI 민주주의</strong>입니다.</li>
+          <li>🔹 AI 민주주의는 직접 민주주의입니다.</li>
+          <li>🔹 시민(고팡 사용자)의 의결권은 그의 공헌도에 비례합니다.</li>
+          <li>🔹 누가 언제 어떤 안건에 어떤 의결권을 행사할 지는 시스템이 결정합니다. 그 시스템이 곧 AI 민주주의입니다.</li>
+          <li>🔹 AI 민주주의가 작동하는 방식 혹은 소스코드는 공개되며(오픈소스), 그 갱신에 누구나 참여할 수 있습니다.</li>
+        </ul>
         <table class="compare-table">
           <thead>
             <tr>
@@ -432,8 +439,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           <tbody>
             <tr><td>의사결정 방식</td><td>선출 대표가 대신 결정</td><td>시민이 <strong>직접 안건 제안 · 의결</strong></td></tr>
             <tr><td>투표 참여</td><td>수년에 한 번 선거</td><td><strong>상시 안건별 직접 투표</strong></td></tr>
-            <tr><td>투표권 배분</td><td>1인 1표 단일 구조</td><td>GDC 기여 기반 <strong>최대 1,000표 + 1인 1표 상원</strong> 이원 균형</td></tr>
-            <tr><td>대자본 견제</td><td>로비·정치자금 영향 존재</td><td>상원(1인 1표 집행부)이 <strong>거부권 행사</strong> 가능</td></tr>
+            <tr><td>투표권 배분</td><td>1인 1표 단일 구조</td><td>GDC 기여 기반 <strong>최대 1,000표 + 1인 1표 집행부</strong> 이원 균형</td></tr>
+            <tr><td>대자본 견제</td><td>로비·정치자금 영향 존재</td><td>집행부(1인 1표)가 <strong>거부권 행사</strong> 가능</td></tr>
             <tr><td>안건 발의</td><td>의원만 가능</td><td><strong>누구나</strong> 제안 — 일정 동의(1,000표) 확보 시 상정</td></tr>
             <tr><td>의결 과정</td><td>밀실 심의, 로비 가능</td><td>게시판 공개 찬반 공방 → <strong>무작위 배심 의결</strong></td></tr>
             <tr><td>의결 결과 기록</td><td>회의록 (위변조 가능)</td><td>모든 의결 <strong>PDV + OpenHash 불변 기록</strong></td></tr>
@@ -454,7 +461,14 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       <div class="inner">
         <div class="sec-badge">핵심 특징</div>
         <h2 class="sec-title">K-Democracy는 어떻게 작동하나요</h2>
-        <p class="sec-sub">대자본도, 특정 세력도 독주할 수 없는 균형 잡힌 직접 민주주의입니다.</p>
+        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:700px;line-height:2">
+          <li>🔹 AI 민주주의는 아무도 독점할 수 없습니다.</li>
+          <li>🔹 기본적으로 1인 1표제인 점은 현실 민주주의와 같습니다.</li>
+          <li>🔹 시민(고팡 사용자) 각각의 의결권은 그의 공헌도에 비례하며, 공헌도는 고팡 시스템 개발 참여도, <a href="https://gcd.gopang.net" target="_blank">GDC(Gopang Digital Currency)</a> 사용 실적, <a href="https://school.gopang.net" target="_blank">학습 기록과 성과</a>, <a href="https://klaw.gopang.net" target="_blank">규칙 준수 여부</a> 등을 다면적으로 평가한 결과 값입니다.</li>
+          <li>🔹 시민은 자신의 의결권을 타인에게 잠정적으로 위임할 수 있으며, 언제든 회수할 수도, 위임 대상을 변경할 수도 있습니다.</li>
+          <li>🔹 새로운 안건이 제안되면, <strong>AI 민주주의</strong>는 누가 해당 안건을 심사하고 토론하며 결정할 지를 결정합니다.</li>
+          <li>🔹 결정된 안건은 즉시 시스템에 반영됩니다.</li>
+        </ul>
         <div class="features-grid">
 
           <div class="feat-card" style="grid-column:1/-1;border:2px solid var(--vi);background:linear-gradient(135deg,#f5f3ff 0%,#eff6ff 100%)">
@@ -464,14 +478,14 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
               </div>
               <div style="flex:1">
                 <div style="font-size:11px;font-weight:700;color:var(--vi-dk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">K-Democracy 핵심 우위</div>
-                <h3 style="font-size:19px;margin-bottom:10px;color:#0f172a">하원(GDC 가중) + 상원(1인 1표) 이원 균형</h3>
+                <h3 style="font-size:19px;margin-bottom:10px;color:#0f172a">GDC 가중 의회 + 1인 1표 집행부 이원 균형</h3>
                 <p style="font-size:13.5px;color:#374151;line-height:1.8">
-                  K-Democracy는 두 가지 균형추를 동시에 작동시킵니다. <strong>하원</strong>은 GDC 사용량·보유량에 비례해 최대 1,000표까지 행사할 수 있어, 고팡 생태계에 더 많이 기여한 시민의 목소리가 더 크게 반영됩니다. 그러나 대량 GDC 보유자들이 독주하지 못하도록, <strong>1인 1표로 선출된 상원(집행부)</strong>이 거부권을 행사합니다.<br><br>
+                  K-Democracy는 두 가지 균형추를 동시에 작동시킵니다. <strong>GDC 의회</strong>는 GDC 사용량·보유량에 비례해 최대 1,000표까지 행사할 수 있어, 고팡 생태계에 더 많이 기여한 시민의 목소리가 더 크게 반영됩니다. 그러나 대량 GDC 보유자들이 독주하지 못하도록, <strong>1인 1표로 선출된 집행부</strong>가 거부권을 행사합니다.<br><br>
                   이 이원 구조는 참여 유인과 형평성을 동시에 달성합니다. 모든 의결 과정과 결과는 PDV와 OpenHash를 통해 위변조 불가하게 기록됩니다. <strong>이것이 K-Democracy만이 제공할 수 있는 고유한 가치입니다.</strong>
                 </p>
                 <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🗳️ 1인 최대 1,000표 하원</span>
-                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">⚖️ 1인 1표 상원 거부권</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🗳️ 1인 최대 1,000표 GDC 의회</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">⚖️ 1인 1표 집행부 거부권</span>
                   <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🔐 PDV + OpenHash 불변 기록</span>
                   <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">📜 오픈소스 전면 공개</span>
                 </div>
@@ -562,7 +576,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           <div class="step">
             <div class="step-num">4</div>
             <div class="step-body">
-              <h4>하원 의결 (GDC 가중 투표)</h4>
+              <h4>GDC 가중 투표 의결</h4>
               <p>무작위로 선정된 배심원단에게 찬반 양측의 주요 논지와 주장이 전달되고 의결이 진행됩니다. 각 배심원은 GDC 기여에 비례한 투표권(1~1,000표)을 행사합니다.</p>
               <span class="step-badge">무작위 배심원 선정 · GDC 비례 1~1,000표 · 비밀 투표</span>
             </div>
@@ -570,16 +584,16 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           <div class="step">
             <div class="step-num">5</div>
             <div class="step-body">
-              <h4>상원 검토 (1인 1표 거부권)</h4>
-              <p>하원에서 가결된 안건은 1인 1표로 선출된 상원(집행부)의 검토를 거칩니다. 상원은 GDC 대량 보유자의 독주를 견제하기 위해 거부권을 행사할 수 있습니다. 거부된 안건은 수정 후 재상정되거나 폐기됩니다.</p>
-              <span class="step-badge">1인 1표 상원 · 거부권 행사 가능 · 수정 재상정 허용</span>
+              <h4>집행부 검토 (1인 1표 거부권)</h4>
+              <p>의결 안건은 1인 1표로 선출된 집행부의 검토를 거칩니다. 집행부는 GDC 대량 보유자의 독주를 견제하기 위해 거부권을 행사할 수 있습니다. 거부된 안건은 수정 후 재상정되거나 폐기됩니다.</p>
+              <span class="step-badge">1인 1표 집행부 · 거부권 행사 가능 · 수정 재상정 허용</span>
             </div>
           </div>
           <div class="step">
             <div class="step-num">6</div>
             <div class="step-body">
               <h4>평행 법률 자동 반영 & PDV 기록</h4>
-              <p>상원을 통과한 안건은 고팡의 운영 규칙(평행 헌법·형법·민법 등)에 즉시 반영됩니다. 모든 과정과 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링되어 영구 보관됩니다.</p>
+              <p>집행부를 통과한 안건은 고팡의 운영 규칙(평행 헌법·형법·민법 등)에 즉시 반영됩니다. 모든 과정과 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링되어 영구 보관됩니다.</p>
               <span class="step-badge">운영 규칙 즉시 갱신 · PDV 영구 기록 · OpenHash 불변 앵커링</span>
             </div>
           </div>
@@ -660,7 +674,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
         <button class="qb" onclick="qs('내 GDC 투표권이 몇 표인지 알려줘')">🗳️ 투표권 확인</button>
         <button class="qb" onclick="qs('현재 의결 진행 중인 안건을 알려줘')">📋 진행 중 안건</button>
         <button class="qb" onclick="qs('평행 헌법이 무엇인지 설명해 줘')">📜 평행 헌법 설명</button>
-        <button class="qb" onclick="qs('하원과 상원의 차이가 무엇인가요?')">⚖️ 하원 vs 상원</button>
+        <button class="qb" onclick="qs('GDC 의회와 집행부의 차이가 무엇인가요?')">⚖️ GDC 의회 vs 집행부</button>
         <button class="qb" onclick="qs('DAWN 철학에 대해 설명해 줘')">🌅 DAWN 철학</button>
       </div>
     </div>
@@ -809,7 +823,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
             <span class="badge b-ok">✅ 가결 · 시행 중</span>
           </div>
           <div class="bill-meta"><span>경제</span><span>·</span><span>2026.04.15 의결</span><span>·</span><span>찬성 71%</span></div>
-          <div style="font-size:12px;color:var(--txt3)">상원 통과 · 2026.05.01부터 시행 · PDV 기록 완료</div>
+          <div style="font-size:12px;color:var(--txt3)">집행부 통과 · 2026.05.01부터 시행 · PDV 기록 완료</div>
         </div>
 
       </div>
@@ -900,16 +914,16 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     </div>
   </div>
 
-  <!-- ════ 하원 ════ -->
+  <!-- ════ GDC 가중 투표 의회 ════ -->
   <div class="panel" id="p-lower">
     <div class="ph">
-      <div class="ph-badge">하원</div>
-      <div class="ph-title">하원 — GDC 가중 투표 의회</div>
+      <div class="ph-badge">GDC 의회</div>
+      <div class="ph-title">GDC 가중 투표 의회</div>
       <div class="ph-sub">GDC 기여에 비례한 투표권(1~1,000표)으로 구성됩니다. 안건 발의·공방·의결을 처리합니다.</div>
     </div>
     <div class="panel-body">
       <div class="stat-grid" style="margin-bottom:16px">
-        <div class="stat-card"><div class="stat-val">3,847</div><div class="stat-lbl">등록 하원 의원</div><div class="stat-sub">GDC 보유 시민 전원</div></div>
+        <div class="stat-card"><div class="stat-val">3,847</div><div class="stat-lbl">등록 의원 수</div><div class="stat-sub">GDC 보유 시민 전원</div></div>
         <div class="stat-card"><div class="stat-val">12</div><div class="stat-lbl">이번 달 의결 완료</div><div class="stat-sub">가결 8건 · 부결 4건</div></div>
         <div class="stat-card"><div class="stat-val">4</div><div class="stat-lbl">현재 의결 진행 중</div><div class="stat-sub">잔여 기간 1~7일</div></div>
       </div>
@@ -930,27 +944,27 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     </div>
   </div>
 
-  <!-- ════ 상원 ════ -->
+  <!-- ════ 1인 1표 집행부 ════ -->
   <div class="panel" id="p-upper">
     <div class="ph">
-      <div class="ph-badge">상원</div>
-      <div class="ph-title">상원 — 1인 1표 집행부</div>
-      <div class="ph-sub">1인 1표로 선출된 집행부입니다. 하원 가결 안건에 거부권을 행사하여 대자본의 독주를 견제합니다.</div>
+      <div class="ph-badge">집행부</div>
+      <div class="ph-title">1인 1표 집행부</div>
+      <div class="ph-sub">1인 1표로 선출된 집행부입니다. GDC 의회 가결 안건에 거부권을 행사하여 대자본의 독주를 견제합니다.</div>
     </div>
     <div class="panel-body">
       <div class="card" style="border-left:3px solid var(--vi);margin-bottom:14px">
-        <div class="card-hd"><span class="card-hd-t">⚖️ 상원의 역할</span></div>
+        <div class="card-hd"><span class="card-hd-t">⚖️ 집행부의 역할</span></div>
         <div class="card-bd" style="font-size:13px;color:var(--txt2);line-height:1.8">
-          상원은 현실의 상원·원로원·헌법재판소를 합친 기능을 수행합니다.<br>
-          <strong>① 거부권:</strong> 하원 가결 안건이 GDC 소수의 독주라고 판단할 경우 거부권을 행사합니다.<br>
+          집행부는 현실의 원로원·헌법재판소를 합친 기능을 수행합니다.<br>
+          <strong>① 거부권:</strong> 의회 가결 안건이 GDC 소수의 독주라고 판단할 경우 거부권을 행사합니다.<br>
           <strong>② 재의 요청:</strong> 거부 시 수정 의견과 함께 재상정을 요청할 수 있습니다.<br>
           <strong>③ 헌법 수호:</strong> 평행 헌법에 위배되는 안건은 즉시 거부합니다.
         </div>
       </div>
       <div class="stat-grid" style="margin-bottom:16px">
-        <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">상원 의원 수</div><div class="stat-sub">1인 1표로 선출</div></div>
+        <div class="stat-card"><div class="stat-val">21</div><div class="stat-lbl">집행부 의원 수</div><div class="stat-sub">1인 1표로 선출</div></div>
         <div class="stat-card"><div class="stat-val">3</div><div class="stat-lbl">이번 달 거부권 행사</div><div class="stat-sub">재상정 2건 · 폐기 1건</div></div>
-        <div class="stat-card"><div class="stat-val">2026.12</div><div class="stat-lbl">다음 상원 선거</div><div class="stat-sub">2년 임기</div></div>
+        <div class="stat-card"><div class="stat-val">2026.12</div><div class="stat-lbl">다음 집행부 선거</div><div class="stat-sub">2년 임기</div></div>
       </div>
     </div>
   </div>
@@ -1027,7 +1041,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 const TITLES = {
   home:'홈', chat:'AI 민주주의 상담', propose:'안건 제안',
   bills:'안건 목록', vote:'의결 참여', myvote:'나의 투표권 (GDC)',
-  lower:'하원 (GDC 가중 투표)', upper:'상원 (1인 1표 집행부)',
+  lower:'GDC 가중 투표 의회', upper:'1인 1표 집행부',
   law:'평행 헌법 & 법률', stats:'의결 통계 & 감사'
 };
 function show(id, btn) {
@@ -1050,9 +1064,9 @@ const SYS = `당신은 K-Democracy AI입니다. 고팡 AI 생태계의 직접 �
 5. DAWN 철학 안내 — Democracy is All We Need
 
 K-Democracy 구조:
-- 하원: GDC 기여 비례 1~1,000표
-- 상원: 1인 1표 선출 집행부 (거부권 보유)
-- 안건 → 1,000표 동의 → 심사·공방 → 무작위 배심 의결 → 상원 검토 → 평행 법률 반영
+- GDC 의회: GDC 기여 비례 1~1,000표
+- 집행부: 1인 1표 선출 (거부권 보유)
+- 안건 → 1,000표 동의 → 심사·공방 → 무작위 배심 의결 → 집행부 검토 → 평행 법률 반영
 
 답변은 쉽고 명확하게, 다음 행동을 항상 안내합니다.`;
 
