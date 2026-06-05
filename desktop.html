@@ -286,12 +286,25 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 @media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr}.stat-grid{grid-template-columns:1fr}}
 </style>
 <script>
-// pdv.js 로드 실패 시 빈 객체로 대체 (export 구문 오류 방어)
+// pdv.js는 ES 모듈(export 구문 사용)이므로 일반 script 태그 로드 불가
+// 기능 유지를 위해 PDV 인터페이스 객체를 인라인으로 정의
 window.PDV = window.PDV || {
-  writeConsult: ()=>{}, writeVote: ()=>{}, writePropose: ()=>{}
+  writeConsult: function(d){ console.log('[PDV] consult', d); },
+  writeVote:    function(d){ console.log('[PDV] vote', d); },
+  writePropose: function(d){ console.log('[PDV] propose', d); },
+  writeAgree:   function(d){ console.log('[PDV] agree', d); }
 };
+// pdv.js가 나중에 모듈로 로드되어 window.PDV를 덮어쓰면 자동 반영됨
 </script>
-<script src="./pdv.js" onerror="console.warn('pdv.js 로드 실패 - 기본 PDV 객체 사용')"></script>
+<script type="module">
+  try {
+    const mod = await import('./pdv.js');
+    if (mod && mod.default) window.PDV = mod.default;
+    else if (mod && mod.PDV) window.PDV = mod.PDV;
+  } catch(e) {
+    console.warn('[PDV] 모듈 로드 실패, 기본 객체 사용:', e.message);
+  }
+</script>
 </head>
 <body>
 <div class="app">
