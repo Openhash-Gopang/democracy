@@ -104,7 +104,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 .inner{max-width:1020px;margin:0 auto;padding:0 40px}
 .sec-badge{display:inline-block;background:var(--vi-bg);color:var(--vi-dk);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;margin-bottom:14px;letter-spacing:.3px;text-transform:uppercase}
 .sec-title{font-size:clamp(20px,3.5vw,34px);font-weight:800;color:#0f172a;letter-spacing:-1px;margin-bottom:12px}
-.sec-sub{font-size:15px;color:var(--txt2);max-width:560px;line-height:1.7}
+.sec-sub{font-size:15px;color:var(--txt2);max-width:820px;line-height:1.85}
+.sec-sub li{padding-left:1.6em;text-indent:-1.6em;word-break:keep-all}
 
 /* 비교표 */
 .compare-sec{background:#f8f9fa;padding:72px 0}
@@ -284,7 +285,13 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 @media(max-width:1100px){.stat-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){.features-grid{grid-template-columns:1fr 1fr}.stat-grid{grid-template-columns:1fr}}
 </style>
-<script src="./pdv.js"></script>
+<script>
+// pdv.js 로드 실패 시 빈 객체로 대체 (export 구문 오류 방어)
+window.PDV = window.PDV || {
+  writeConsult: ()=>{}, writeVote: ()=>{}, writePropose: ()=>{}
+};
+</script>
+<script src="./pdv.js" onerror="console.warn('pdv.js 로드 실패 - 기본 PDV 객체 사용')"></script>
 </head>
 <body>
 <div class="app">
@@ -334,7 +341,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 
   <button class="sb-item" onclick="show('myvote',this)">
     <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg></span>
-    <span class="sb-lbl">나의 투표권 (GDC)</span>
+    <span class="sb-lbl">나의 투표권 (AI 산정)</span>
   </button>
 
   <div class="sb-group">의회</div>
@@ -351,7 +358,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 
   <button class="sb-item" onclick="show('law',this)">
     <span class="sb-icon"><svg viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg></span>
-    <span class="sb-lbl">평행 헌법 & 법률</span>
+    <span class="sb-lbl">고팡 원칙 & 규칙</span>
   </button>
 
   <div class="sb-group">통계</div>
@@ -419,14 +426,14 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       <div class="inner">
         <div class="sec-badge">기존 민주주의 vs K-Democracy</div>
         <h2 class="sec-title">AI 평행 세계의 민주주의는 조금 다릅니다</h2>
-        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:660px;line-height:2">
-          <li>🔹 고팡은 현실 세계의 AI 평행 세계입니다.</li>
+        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:820px;line-height:2">
+          <li>🔹 고팡은 현실 세계의 AI 평행 세계</li>
           <li>🔹 현실에 존재하는 모든 기관, 사물, 사람의 AI 쌍둥이 세계입니다.</li>
           <li>🔹 고팡의 운영은 현실 민주주의의 AI 쌍둥이에 의합니다. 즉, <strong>AI 민주주의</strong>입니다.</li>
-          <li>🔹 AI 민주주의는 직접 민주주의입니다.</li>
-          <li>🔹 시민(고팡 사용자)의 의결권은 그의 공헌도에 비례합니다.</li>
-          <li>🔹 누가 언제 어떤 안건에 어떤 의결권을 행사할 지는 시스템이 결정합니다. 그 시스템이 곧 AI 민주주의입니다.</li>
-          <li>🔹 AI 민주주의가 작동하는 방식 혹은 소스코드는 공개되며(오픈소스), 그 갱신에 누구나 참여할 수 있습니다.</li>
+          <li>🔹 고팡 운영 시스템은 직접 민주주의입니다.</li>
+          <li>🔹 시민(고팡 사용자)의 투표권은 GDC 사용량, 고팡 코드 공헌, K-Law 준법 수준 등을 다각도로 반영하여 AI가 산정합니다.</li>
+          <li>🔹 누가 언제 어떤 안건에 어떤 의결권을 행사할 지는 시스템이 결정합니다. 그 시스템이 곧 고팡 운영 시스템입니다.</li>
+          <li>🔹 고팡 운영 시스템이 작동하는 방식 혹은 소스코드는 공개되며(오픈소스), 그 갱신에 누구나 참여할 수 있습니다.</li>
         </ul>
         <table class="compare-table">
           <thead>
@@ -439,12 +446,12 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           <tbody>
             <tr><td>의사결정 방식</td><td>선출 대표가 대신 결정</td><td>시민이 <strong>직접 안건 제안 · 의결</strong></td></tr>
             <tr><td>투표 참여</td><td>수년에 한 번 선거</td><td><strong>상시 안건별 직접 투표</strong></td></tr>
-            <tr><td>투표권 배분</td><td>1인 1표 단일 구조</td><td>GDC 기여 기반 <strong>최대 1,000표 + 1인 1표 집행부</strong> 이원 균형</td></tr>
+            <tr><td>투표권 배분</td><td>1인 1표 단일 구조</td><td>GDC 사용·코드 공헌·준법 수준 등 <strong>다각도 AI 산정 최대 1,000표 + 1인 1표 집행부</strong> 이원 균형</td></tr>
             <tr><td>대자본 견제</td><td>로비·정치자금 영향 존재</td><td>집행부(1인 1표)가 <strong>거부권 행사</strong> 가능</td></tr>
             <tr><td>안건 발의</td><td>의원만 가능</td><td><strong>누구나</strong> 제안 — 일정 동의(1,000표) 확보 시 상정</td></tr>
             <tr><td>의결 과정</td><td>밀실 심의, 로비 가능</td><td>게시판 공개 찬반 공방 → <strong>무작위 배심 의결</strong></td></tr>
             <tr><td>의결 결과 기록</td><td>회의록 (위변조 가능)</td><td>모든 의결 <strong>PDV + OpenHash 불변 기록</strong></td></tr>
-            <tr><td>법률 체계</td><td>현실 헌법·법률</td><td><strong>평행 헌법·평행 형법</strong> 등 고팡 전용 규범</td></tr>
+            <tr><td>규범 체계</td><td>현실 헌법·법률</td><td><strong>고팡 원칙·형사규칙</strong> 등 고팡 전용 규범</td></tr>
             <tr><td>규칙 개정</td><td>수개월~수년 소요</td><td>안건 의결 즉시 <strong>고팡 운영 규칙 자동 갱신</strong></td></tr>
             <tr style="background:linear-gradient(90deg,#f5f3ff,#eff6ff)">
               <td style="font-weight:700;color:#0f172a">투명성</td>
@@ -456,17 +463,92 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       </div>
     </div>
 
+    <!-- 원칙 & 규칙 설명 섹션 -->
+    <div style="background:#fafaf8;padding:56px 0;border-top:1px solid #e8e5df;border-bottom:1px solid #e8e5df">
+      <div class="inner">
+        <div class="sec-badge">고팡 규범 체계</div>
+        <h2 class="sec-title">원칙과 규칙</h2>
+        <p style="font-size:15px;color:var(--txt2);max-width:820px;line-height:1.9;margin-bottom:32px;word-break:keep-all">
+          고팡의 운영 규범은 <strong>원칙</strong>과 <strong>규칙</strong>으로 구성됩니다.
+          둘 다 K-Democracy 의결로만 제정·개정되며, 현실 세계의 헌법·법률에 종속됩니다.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:820px">
+
+          <!-- 원칙 카드 -->
+          <div style="background:#fff;border:1.5px solid #bbf7d0;border-radius:14px;overflow:hidden">
+            <div style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);padding:20px 24px;border-bottom:1px solid #bbf7d0">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#166534;margin-bottom:6px">PRINCIPLE · 원칙</div>
+              <div style="font-size:18px;font-weight:800;color:#14532d">현실의 헌법에 대응</div>
+            </div>
+            <div style="padding:20px 24px;font-size:14px;color:#334155;line-height:1.9">
+              <p style="margin-bottom:14px;word-break:keep-all">
+                원칙은 고팡의 모든 사용자가 반드시 준수해야 하는
+                <strong style="color:#166534">추상적·보편적·일반적 명제</strong>입니다.
+                특정 상황을 전제하지 않고 생태계 전체에 동일하게 적용됩니다.
+              </p>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ 고팡은 비영리 오픈소스 생태계이다</li>
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ 모든 사용자의 데이터는 사용자 본인만 통제한다</li>
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ 고팡의 권력은 사용자로부터 나온다</li>
+              </ul>
+              <div style="margin-top:16px;padding:10px 12px;background:#f0fdf4;border-radius:7px;font-size:12.5px;color:#166534;border:1px solid #bbf7d0">
+                개정 시 전체 의결권 2/3 이상 필요 · 일부 조항 개정 불가
+              </div>
+            </div>
+          </div>
+
+          <!-- 규칙 카드 -->
+          <div style="background:#fff;border:1.5px solid #bfdbfe;border-radius:14px;overflow:hidden">
+            <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);padding:20px 24px;border-bottom:1px solid #bfdbfe">
+              <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1e40af;margin-bottom:6px">RULE · 규칙</div>
+              <div style="font-size:18px;font-weight:800;color:#1e3a8a">현실의 법률에 대응</div>
+            </div>
+            <div style="padding:20px 24px;font-size:14px;color:#334155;line-height:1.9">
+              <p style="margin-bottom:14px;word-break:keep-all">
+                규칙은 특수한 개별 상황에 적용되는
+                <strong style="color:#1e40af">구체적·사실적 명제</strong>입니다.
+                원칙의 하위에 위치하며 영역별(형사·민사·상거래·세금 등)로 구분됩니다.
+              </p>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ PDV 무단 접근 시 GDC 50만 표 벌금</li>
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ GDC 거래 수수료 0% 적용 기준</li>
+                <li style="padding-left:1.4em;text-indent:-1.4em;word-break:keep-all">✦ K-Market 배달 불이행 시 48시간 내 조정</li>
+              </ul>
+              <div style="margin-top:16px;padding:10px 12px;background:#eff6ff;border-radius:7px;font-size:12.5px;color:#1e40af;border:1px solid #bfdbfe">
+                일반 안건 의결 절차로 개정 · 원칙에 위배 불가
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 관계도 -->
+        <div style="margin-top:20px;max-width:820px;padding:14px 20px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13.5px;color:#475569">
+          <span style="font-weight:700;color:#0f172a">적용 우선순위</span>
+          <span style="display:flex;align-items:center;gap:8px">
+            <span style="padding:4px 12px;background:#fef9c3;border:1px solid #fde68a;border-radius:20px;font-weight:600;color:#92400e;font-size:12px">현실 헌법·법률</span>
+            <span style="color:#94a3b8">〉</span>
+            <span style="padding:4px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;font-weight:600;color:#166534;font-size:12px">고팡 원칙</span>
+            <span style="color:#94a3b8">〉</span>
+            <span style="padding:4px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;font-weight:600;color:#1e40af;font-size:12px">고팡 규칙</span>
+          </span>
+          <span style="color:#94a3b8;font-size:12px">충돌 시 상위 규범 우선</span>
+        </div>
+
+      </div>
+    </div>
+
     <!-- 특징 카드 -->
     <div class="features-sec">
       <div class="inner">
         <div class="sec-badge">핵심 특징</div>
         <h2 class="sec-title">K-Democracy는 어떻게 작동하나요</h2>
-        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:700px;line-height:2">
-          <li>🔹 AI 민주주의는 아무도 독점할 수 없습니다.</li>
+        <ul class="sec-sub" style="list-style:none;padding:0;margin:0 0 24px;max-width:820px;line-height:2">
+          <li>🔹 고팡 운영 시스템은 아무도 독점할 수 없습니다.</li>
           <li>🔹 기본적으로 1인 1표제인 점은 현실 민주주의와 같습니다.</li>
-          <li>🔹 시민(고팡 사용자) 각각의 의결권은 그의 공헌도에 비례하며, 공헌도는 고팡 시스템 개발 참여도, <a href="https://gcd.gopang.net" target="_blank">GDC(Gopang Digital Currency)</a> 사용 실적, <a href="https://school.gopang.net" target="_blank">학습 기록과 성과</a>, <a href="https://klaw.gopang.net" target="_blank">규칙 준수 여부</a> 등을 다면적으로 평가한 결과 값입니다.</li>
+          <li>🔹 시민(고팡 사용자) 각각의 투표권은 <a href="https://gcd.gopang.net" target="_blank">GDC(Gopang Digital Currency)</a> 사용 실적, 고팡 코드 공헌도, <a href="https://klaw.gopang.net" target="_blank">K-Law 준법 수준</a>, <a href="https://school.gopang.net" target="_blank">학습 성과</a> 등을 다각도로 반영하여 AI가 결정합니다. 해당 AI의 System Prompt는 오픈소스로 공개·수정·갱신됩니다.</li>
           <li>🔹 시민은 자신의 의결권을 타인에게 잠정적으로 위임할 수 있으며, 언제든 회수할 수도, 위임 대상을 변경할 수도 있습니다.</li>
-          <li>🔹 새로운 안건이 제안되면, <strong>AI 민주주의</strong>는 누가 해당 안건을 심사하고 토론하며 결정할 지를 결정합니다.</li>
+          <li>🔹 새로운 안건이 제안되면, <strong>고팡 운영 시스템</strong>이 누가 해당 안건을 심사하고 토론하며 결정할 지를 결정합니다.</li>
           <li>🔹 결정된 안건은 즉시 시스템에 반영됩니다.</li>
         </ul>
         <div class="features-grid">
@@ -480,11 +562,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
                 <div style="font-size:11px;font-weight:700;color:var(--vi-dk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">K-Democracy 핵심 우위</div>
                 <h3 style="font-size:19px;margin-bottom:10px;color:#0f172a">GDC 가중 의회 + 1인 1표 집행부 이원 균형</h3>
                 <p style="font-size:13.5px;color:#374151;line-height:1.8">
-                  K-Democracy는 두 가지 균형추를 동시에 작동시킵니다. <strong>GDC 의회</strong>는 GDC 사용량·보유량에 비례해 최대 1,000표까지 행사할 수 있어, 고팡 생태계에 더 많이 기여한 시민의 목소리가 더 크게 반영됩니다. 그러나 대량 GDC 보유자들이 독주하지 못하도록, <strong>1인 1표로 선출된 집행부</strong>가 거부권을 행사합니다.<br><br>
+                  K-Democracy는 두 가지 균형추를 동시에 작동시킵니다. <strong>GDC 의회</strong>는 GDC 사용량, 코드 공헌, K-Law 준법 수준 등을 다각도로 반영하여 AI가 산정한 최대 1,000표를 행사할 수 있어, 생태계에 더 많이 기여한 시민의 목소리가 더 크게 반영됩니다. 그러나 대량 GDC 보유자들이 독주하지 못하도록, <strong>1인 1표로 선출된 집행부</strong>가 거부권을 행사합니다.<br><br>
                   이 이원 구조는 참여 유인과 형평성을 동시에 달성합니다. 모든 의결 과정과 결과는 PDV와 OpenHash를 통해 위변조 불가하게 기록됩니다. <strong>이것이 K-Democracy만이 제공할 수 있는 고유한 가치입니다.</strong>
                 </p>
                 <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🗳️ 1인 최대 1,000표 GDC 의회</span>
+                  <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🗳️ AI 다각도 산정 최대 1,000표</span>
                   <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">⚖️ 1인 1표 집행부 거부권</span>
                   <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">🔐 PDV + OpenHash 불변 기록</span>
                   <span style="background:#fff;border:1px solid var(--vi-bd);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--vi-dk)">📜 오픈소스 전면 공개</span>
@@ -515,17 +597,17 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
             <div class="feat-icon" style="background:var(--green-bg);color:#065f46">
               <svg viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
             </div>
-            <h3>평행 헌법 & 법률 체계</h3>
-            <p>의결된 안건은 고팡 운영 규칙에 추가되거나 기존 규칙을 갱신합니다. 현실의 헌법·형법·민법·행정법·상법·세법에 대응하는 <strong>평행 헌법, 평행 형법</strong> 등으로 구성됩니다.</p>
-            <div class="feat-source">📜 평행 헌법 · 평행 형법 · 평행 민법 · 평행 상법 · 평행 세법 · 평행 행정법</div>
+            <h3>고팡 원칙 & 규칙 체계</h3>
+            <p>의결된 안건은 고팡의 원칙 또는 규칙에 즉시 반영됩니다. <strong>원칙</strong>은 현실의 헌법에, <strong>규칙</strong>은 민법·형법 등 일반법에 대응하는 고팡 전용 규범입니다.</p>
+            <div class="feat-source">📜 고팡 원칙 · 형사규칙 · 민사규칙 · 상거래규칙 · 세금규칙 · 행정규칙</div>
           </div>
 
           <div class="feat-card">
             <div class="feat-icon" style="background:var(--orange-bg);color:var(--orange)">
               <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
-            <h3>GDC 연동 투표권</h3>
-            <p>1인 1표를 기반으로 GDC 사용량(거래량)과 보유량에 따라 최대 1,000표까지 행사합니다. GDC를 더 많이 사용할수록 투표권이 늘어나므로, 생태계 기여가 많을수록 의사 결정에 더 큰 영향력을 갖습니다.</p>
+            <h3>다각도 AI 산정 투표권</h3>
+            <p>1인 1표를 기반으로 GDC 사용량, 고팡 코드 공헌, K-Law 준법 수준 등을 종합하여 AI가 최대 1,000표까지 산정합니다. 누구에게 얼마의 투표권을 부여할지는 AI가 결정하며, 해당 AI의 System Prompt는 오픈소스로 공개·수정·갱신됩니다.</p>
             <div class="feat-source">💰 GDC 보유량 + 거래량 기반 · 최소 1표 ~ 최대 1,000표 · 실시간 산정</div>
           </div>
 
@@ -546,8 +628,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     <div class="how-sec">
       <div class="inner">
         <div class="sec-badge" style="background:rgba(124,58,237,.2);color:#c4b5fd">작동 방식</div>
-        <h2 class="sec-title" style="color:#fff">안건이 법률이 되는 과정</h2>
-        <p class="sec-sub" style="color:#94a3b8">제안부터 평행 법률 반영까지 — 6단계 K-Democracy 워크플로우</p>
+        <h2 class="sec-title" style="color:#fff">안건이 원칙·규칙이 되는 과정</h2>
+        <p class="sec-sub" style="color:#94a3b8">제안부터 고팡 원칙·규칙 반영까지 — 6단계 K-Democracy 워크플로우</p>
         <div class="steps">
           <div class="step">
             <div class="step-num">1</div>
@@ -561,8 +643,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
             <div class="step-num">2</div>
             <div class="step-body">
               <h4>동의 확보 (1,000표)</h4>
-              <p>게재된 안건은 다른 시민들의 동의를 얻어야 합니다. 동의도 GDC 기반 투표권 비례로 행사됩니다. 일정 수(예: 1,000표)의 동의를 확보한 안건만 심사 게시판에 상정됩니다. 이를 통해 소수의 민감한 안건이 자원 낭비 없이 걸러집니다.</p>
-              <span class="step-badge">GDC 비례 동의 투표 · 1,000표 기준 · 미달 시 자동 보류</span>
+              <p>게재된 안건은 다른 시민들의 동의를 얻어야 합니다. 동의도 AI가 산정한 투표권 비례로 행사됩니다. 일정 수(예: 1,000표)의 동의를 확보한 안건만 심사 게시판에 상정됩니다. 이를 통해 소수의 민감한 안건이 자원 낭비 없이 걸러집니다.</p>
+              <span class="step-badge">AI 산정 투표권 비례 동의 · 1,000표 기준 · 미달 시 자동 보류</span>
             </div>
           </div>
           <div class="step">
@@ -577,8 +659,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
             <div class="step-num">4</div>
             <div class="step-body">
               <h4>GDC 가중 투표 의결</h4>
-              <p>무작위로 선정된 배심원단에게 찬반 양측의 주요 논지와 주장이 전달되고 의결이 진행됩니다. 각 배심원은 GDC 기여에 비례한 투표권(1~1,000표)을 행사합니다.</p>
-              <span class="step-badge">무작위 배심원 선정 · GDC 비례 1~1,000표 · 비밀 투표</span>
+              <p>무작위로 선정된 배심원단에게 찬반 양측의 주요 논지와 주장이 전달되고 의결이 진행됩니다. 각 배심원은 AI가 다각도로 산정한 투표권(1~1,000표)을 행사합니다.</p>
+              <span class="step-badge">무작위 배심원 선정 · AI 산정 1~1,000표 · 비밀 투표</span>
             </div>
           </div>
           <div class="step">
@@ -592,8 +674,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           <div class="step">
             <div class="step-num">6</div>
             <div class="step-body">
-              <h4>평행 법률 자동 반영 & PDV 기록</h4>
-              <p>집행부를 통과한 안건은 고팡의 운영 규칙(평행 헌법·형법·민법 등)에 즉시 반영됩니다. 모든 과정과 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링되어 영구 보관됩니다.</p>
+              <h4>고팡 원칙·규칙 자동 반영 & PDV 기록</h4>
+              <p>집행부를 통과한 안건은 고팡의 원칙 또는 해당 규칙(형사규칙·민사규칙 등)에 즉시 반영됩니다. 모든 과정과 결과는 PDV에 암호화 저장되고 OpenHash로 앵커링되어 영구 보관됩니다.</p>
               <span class="step-badge">운영 규칙 즉시 갱신 · PDV 영구 기록 · OpenHash 불변 앵커링</span>
             </div>
           </div>
@@ -663,17 +745,17 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
       <div class="chat-av"><svg viewBox="0 0 24 24"><path d="M18 16l4-4-4-4M6 8l-4 4 4 4m8.5-12l-5 16"/></svg></div>
       <div>
         <div class="chat-name">K-Democracy AI</div>
-        <div class="chat-status">안건 분석 · 법률 조회 · 논지 요약</div>
+        <div class="chat-status">안건 분석 · 원칙·규칙 조회 · 논지 요약</div>
       </div>
     </div>
     <div class="chat-body" id="chat-body">
-      <div class="b-ai">안녕하세요! K-Democracy AI입니다. 🗳️<br><br>안건 제안 도움, 찬반 논지 분석, 평행 법률 조회, 투표권 확인 등 고팡 민주주의에 관한 모든 질문에 답합니다.<br><br><em style="font-size:12px;color:var(--txt3)">※ 모든 의결 기록은 PDV에 저장됩니다</em></div>
+      <div class="b-ai">안녕하세요! K-Democracy AI입니다. 🗳️<br><br>안건 제안 도움, 찬반 논지 분석, 고팡 원칙·규칙 조회, 투표권 확인 등 고팡 민주주의에 관한 모든 질문에 답합니다.<br><br><em style="font-size:12px;color:var(--txt3)">※ 모든 의결 기록은 PDV에 저장됩니다</em></div>
       <div class="b-sys">아래에서 빠르게 시작하세요</div>
       <div class="quick-row">
         <button class="qb" onclick="qs('안건을 제안하고 싶어요. 도와주세요')">📝 안건 제안 도움</button>
-        <button class="qb" onclick="qs('내 GDC 투표권이 몇 표인지 알려줘')">🗳️ 투표권 확인</button>
+        <button class="qb" onclick="qs('내 투표권이 몇 표인지, 어떻게 산정됐는지 알려줘')">🗳️ 투표권 확인</button>
         <button class="qb" onclick="qs('현재 의결 진행 중인 안건을 알려줘')">📋 진행 중 안건</button>
-        <button class="qb" onclick="qs('평행 헌법이 무엇인지 설명해 줘')">📜 평행 헌법 설명</button>
+        <button class="qb" onclick="qs('고팡 원칙과 규칙의 차이를 설명해 줘')">📜 원칙 & 규칙 설명</button>
         <button class="qb" onclick="qs('GDC 의회와 집행부의 차이가 무엇인가요?')">⚖️ GDC 의회 vs 집행부</button>
         <button class="qb" onclick="qs('DAWN 철학에 대해 설명해 줘')">🌅 DAWN 철학</button>
       </div>
@@ -871,7 +953,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           · 고팡 거래 수수료 인하<br>
           · 회계 방식 변경 (IFRS 기반 채택)<br>
           · GDC 최대 투표권 상한을 1,000표 → 500표로 조정<br>
-          · 평행 형사규칙 제3조 개정 (디지털 사기 처벌 강화)
+          · 형사규칙 제3조 개정 (디지털 사기 처벌 강화)
         </div>
       </div>
 
@@ -943,15 +1025,15 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 
         <div class="bill-card" data-status="petition">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <div class="bill-title">평행 형법 제3조 개정 — 디지털 사기 처벌 강화</div>
+            <div class="bill-title">형사규칙 제3조 개정 — 디지털 사기 처벌 강화</div>
             <span class="badge b-wait">📣 동의 확보 중</span>
           </div>
-          <div class="bill-meta"><span>법률</span><span>·</span><span>제안자: 최○○</span><span>·</span><span>2026.05.31</span></div>
+          <div class="bill-meta"><span>규칙</span><span>·</span><span>제안자: 최○○</span><span>·</span><span>2026.05.31</span></div>
           <div style="font-size:12px;color:var(--txt3);margin-bottom:6px">340 / 1,000표 동의 확보</div>
           <div class="bill-progress"><div class="bill-fill" style="width:34%;background:var(--vi)"></div></div>
           <div class="bill-actions">
-            <button class="b-btn b-btn-for" style="flex:2" onclick="if(window.PDV)PDV.writeAgree({billId:'bill-003',billTitle:'평행 형법 제3조 개정',voteWeight:247});toast('✅ 동의하였습니다. PDV에 기록됩니다.')">👍 동의하기</button>
-            <button class="b-btn-detail" onclick="showBillDetail('형법 개정')">상세</button>
+            <button class="b-btn b-btn-for" style="flex:2" onclick="if(window.PDV)PDV.writeAgree({billId:'bill-003',billTitle:'형사규칙 제3조 개정',voteWeight:247});toast('✅ 동의하였습니다. PDV에 기록됩니다.')">👍 동의하기</button>
+            <button class="b-btn-detail" onclick="showBillDetail('형사규칙 개정')">상세</button>
           </div>
         </div>
 
@@ -973,7 +1055,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     <div class="ph">
       <div class="ph-badge">의결 참여</div>
       <div class="ph-title">현재 의결 진행 중인 안건</div>
-      <div class="ph-sub">무작위 배심원으로 선정된 경우 아래에서 투표합니다. GDC 투표권 비례로 행사됩니다.</div>
+      <div class="ph-sub">무작위 배심원으로 선정된 경우 아래에서 투표합니다. AI 산정 투표권 비례로 행사됩니다.</div>
     </div>
     <div class="panel-body">
       <div class="card" style="border:1.5px solid var(--vi);margin-bottom:14px">
@@ -981,7 +1063,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
         <div class="card-bd">
           <div style="font-size:13px;color:var(--txt2);line-height:1.8;margin-bottom:12px">
             안건 <strong>「고팡 거래 수수료 0.2% → 0.15% 인하」</strong>의 배심원으로 무작위 선정됐습니다.<br>
-            귀하의 현재 투표권: <strong style="color:var(--vi)">247표</strong> (GDC 보유 180 + 거래량 67)
+            귀하의 현재 투표권: <strong style="color:var(--vi)">247표</strong> (GDC 사용 120 + 코드 공헌 80 + 준법 47)
           </div>
           <div style="background:#f8f9fa;border-radius:9px;padding:14px;margin-bottom:14px">
             <div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">찬성 측 핵심 논거</div>
@@ -1003,24 +1085,29 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
   <div class="panel" id="p-myvote">
     <div class="ph">
       <div class="ph-badge">나의 투표권</div>
-      <div class="ph-title">GDC 기반 투표권 현황</div>
-      <div class="ph-sub">GDC 보유량과 거래량에 비례하여 투표권이 산정됩니다. 최소 1표, 최대 1,000표.</div>
+      <div class="ph-title">다각도 AI 산정 투표권 현황</div>
+      <div class="ph-sub">GDC 사용량, 코드 공헌, K-Law 준법 수준 등을 종합하여 AI가 산정합니다. 최소 1표, 최대 1,000표. 산정 기준 AI의 System Prompt는 오픈소스로 공개됩니다.</div>
     </div>
     <div class="panel-body">
       <div class="gdc-vote-card">
         <div class="gdc-vote-label">현재 나의 투표권</div>
         <div class="gdc-vote-power">247 <span style="font-size:16px;font-weight:500;color:#c4b5fd">표</span></div>
-        <div style="font-size:12px;color:#c4b5fd;margin-top:4px">최대 1,000표 중 24.7% 수준</div>
+        <div style="font-size:12px;color:#c4b5fd;margin-top:4px">최대 1,000표 중 24.7% · AI 산정 · System Prompt 오픈소스 공개</div>
         <div class="gdc-vote-bars">
           <div class="gdc-vote-bar-row">
-            <span style="width:80px">GDC 보유</span>
-            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:72%"></div></div>
-            <span>180표</span>
+            <span style="width:80px">GDC 사용</span>
+            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:48%"></div></div>
+            <span>120표</span>
           </div>
           <div class="gdc-vote-bar-row">
-            <span style="width:80px">거래량</span>
-            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:27%"></div></div>
-            <span>67표</span>
+            <span style="width:80px">코드 공헌</span>
+            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:32%"></div></div>
+            <span>80표</span>
+          </div>
+          <div class="gdc-vote-bar-row">
+            <span style="width:80px">K-Law 준법</span>
+            <div class="gdc-vote-bar-track"><div class="gdc-vote-bar-fill" style="width:19%"></div></div>
+            <span>47표</span>
           </div>
         </div>
       </div>
@@ -1028,12 +1115,13 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
         <div class="card-hd"><span class="card-hd-t">📊 투표권 산정 기준</span></div>
         <div class="card-bd">
           <table class="data-table">
-            <thead><tr><th>항목</th><th>기준</th><th>나의 현황</th><th>투표권</th></tr></thead>
+            <thead><tr><th>항목</th><th>산정 기준</th><th>나의 현황</th><th>투표권</th></tr></thead>
             <tbody>
               <tr><td>기본</td><td>고팡 시민 누구나</td><td>인증 완료</td><td>1표</td></tr>
-              <tr><td>GDC 보유량</td><td>보유 GDC × 0.1</td><td>1,800 GDC</td><td>180표</td></tr>
-              <tr><td>GDC 거래량</td><td>월 거래량 × 0.05</td><td>1,340 GDC/월</td><td>67표</td></tr>
-              <tr><td><strong>합계</strong></td><td>최대 1,000표 상한</td><td>—</td><td><strong>247표</strong></td></tr>
+              <tr><td>GDC 사용량</td><td>월 GDC 사용 실적</td><td>활성</td><td>120표</td></tr>
+              <tr><td>코드 공헌</td><td>GitHub 기여 이력</td><td>12 커밋</td><td>80표</td></tr>
+              <tr><td>K-Law 준법</td><td>위반 이력 역산정</td><td>위반 0건</td><td>47표</td></tr>
+              <tr><td><strong>합계 (AI 산정)</strong></td><td>최대 1,000표 상한</td><td>—</td><td><strong>247표</strong></td></tr>
             </tbody>
           </table>
         </div>
@@ -1045,7 +1133,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
             <span>GDC 스테이킹 이자율 상향 조정</span><span style="color:var(--vi);font-weight:700">찬성 (247표)</span>
           </div>
           <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:13px">
-            <span>평행 민법 제7조 개정</span><span style="color:var(--txt3);font-weight:700">기권</span>
+            <span>민사규칙 제7조 개정</span><span style="color:var(--txt3);font-weight:700">기권</span>
           </div>
         </div>
       </div>
@@ -1057,7 +1145,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     <div class="ph">
       <div class="ph-badge">GDC 의회</div>
       <div class="ph-title">GDC 가중 투표 의회</div>
-      <div class="ph-sub">GDC 기여에 비례한 투표권(1~1,000표)으로 구성됩니다. 안건 발의·공방·의결을 처리합니다.</div>
+      <div class="ph-sub">GDC 사용량·코드 공헌·K-Law 준법 수준 등을 AI가 다각도로 산정한 투표권(1~1,000표)으로 구성됩니다. 안건 발의·공방·의결을 처리합니다.</div>
     </div>
     <div class="panel-body">
       <div class="stat-grid" style="margin-bottom:16px">
@@ -1096,7 +1184,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
           집행부는 현실의 원로원·헌법재판소를 합친 기능을 수행합니다.<br>
           <strong>① 거부권:</strong> 의회 가결 안건이 GDC 소수의 독주라고 판단할 경우 거부권을 행사합니다.<br>
           <strong>② 재의 요청:</strong> 거부 시 수정 의견과 함께 재상정을 요청할 수 있습니다.<br>
-          <strong>③ 헌법 수호:</strong> 평행 헌법에 위배되는 안건은 즉시 거부합니다.
+          <strong>③ 원칙 수호:</strong> 고팡 원칙에 위배되는 안건은 즉시 거부합니다.
         </div>
       </div>
       <div class="stat-grid" style="margin-bottom:16px">
@@ -1107,29 +1195,45 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
     </div>
   </div>
 
-  <!-- ════ 평행 헌법 & 법률 ════ -->
+  <!-- ════ 고팡 원칙 & 규칙 ════ -->
   <div class="panel" id="p-law">
     <div class="ph">
-      <div class="ph-badge">평행 법률</div>
-      <div class="ph-title">고팡 평행 헌법 & 법률 체계</div>
-      <div class="ph-sub">현실 세계의 헌법·법률에 대응하는 고팡 전용 규범입니다. 의결로만 변경됩니다.</div>
+      <div class="ph-badge">원칙 & 규칙</div>
+      <div class="ph-title">고팡 원칙 & 규칙 체계</div>
+      <div class="ph-sub">원칙은 현실의 헌법에, 규칙은 현실의 법률(민법·형법 등)에 대응하는 고팡 전용 규범입니다. K-Democracy 의결로만 변경됩니다.</div>
     </div>
     <div class="panel-body">
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hd"><span class="card-hd-t">📜 평행 법률 체계</span></div>
+        <div class="card-hd"><span class="card-hd-t">📜 고팡 원칙 & 규칙 체계</span></div>
         <div class="card-bd">
           <table class="data-table">
-            <thead><tr><th>고팡 명칭</th><th>현실 대응</th><th>최종 개정</th><th>조항 수</th><th>상태</th></tr></thead>
+            <thead><tr><th>고팡 명칭</th><th>성격</th><th>현실 대응</th><th>최종 개정</th><th>조항 수</th><th>상태</th></tr></thead>
             <tbody>
-              <tr><td>평행 헌법</td><td>대한민국 헌법</td><td>2026.04.01</td><td>32조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 형법</td><td>형법</td><td>2026.05.15</td><td>87조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 민법</td><td>민법</td><td>2026.03.10</td><td>124조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 상법</td><td>상법</td><td>2026.02.20</td><td>56조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 세법</td><td>국세기본법·부가가치세법</td><td>2026.05.01</td><td>43조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 행정법</td><td>행정 절차법</td><td>2026.01.15</td><td>29조</td><td><span class="badge b-ok">시행 중</span></td></tr>
-              <tr><td>평행 가사법</td><td>가사 소송법</td><td>—</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
+              <tr><td><strong>고팡 원칙</strong></td><td>원칙 — 최상위 규범</td><td>대한민국 헌법</td><td>2026.04.01</td><td>17조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>형사규칙</td><td>규칙 — 원칙 하위</td><td>형법</td><td>2026.05.15</td><td>30조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>민사규칙</td><td>규칙 — 원칙 하위</td><td>민법</td><td>2026.03.10</td><td>18조</td><td><span class="badge b-ok">시행 중</span></td></tr>
+              <tr><td>상거래규칙</td><td>규칙 — 원칙 하위</td><td>상법</td><td>2026.02.20</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
+              <tr><td>세금규칙</td><td>규칙 — 원칙 하위</td><td>국세기본법·부가가치세법</td><td>2026.05.01</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
+              <tr><td>행정규칙</td><td>규칙 — 원칙 하위</td><td>행정 절차법</td><td>2026.01.15</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
+              <tr><td>가사규칙</td><td>규칙 — 원칙 하위</td><td>가사 소송법</td><td>—</td><td>—</td><td><span class="badge b-wait">입안 중</span></td></tr>
             </tbody>
           </table>
+          <div style="margin-top:16px;padding:16px 18px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;font-size:13.5px;line-height:1.9;color:#334155">
+            <div style="font-weight:700;color:#0f172a;margin-bottom:10px">📌 원칙과 규칙의 차이</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="padding:12px 14px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+                <div style="font-weight:700;color:#166534;margin-bottom:6px">⚖️ 원칙 — 현실의 헌법에 대응</div>
+                고팡 생태계의 최상위 규범입니다. 사용자의 기본권, 고팡 운영 시스템의 작동 방식, 현실 법률과의 관계 등 근본 원리를 정의합니다. 개정에는 전체 의결권의 2/3 이상이 필요하며, 일부 조항은 개정 자체가 불가합니다.
+              </div>
+              <div style="padding:12px 14px;background:#eff6ff;border-radius:8px;border:1px solid #bfdbfe">
+                <div style="font-weight:700;color:#1e40af;margin-bottom:6px">📋 규칙 — 현실의 법률에 대응</div>
+                원칙의 하위에 위치하는 세부 운영 규범입니다. 형사·민사·상거래·세금·행정·가사 등 영역별로 구분되며, 원칙에 위배될 수 없습니다. 일반 안건 의결 절차로 개정됩니다.
+              </div>
+            </div>
+            <div style="margin-top:10px;padding:10px 12px;background:#fefce8;border-radius:7px;border:1px solid #fde68a;font-size:12.5px;color:#92400e">
+              ⚠️ 고팡의 원칙과 규칙은 현실 세계의 헌법·법률에 종속됩니다. 충돌 시 현실 법률이 우선합니다.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1178,9 +1282,9 @@ button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none
 <script>
 const TITLES = {
   home:'홈', chat:'AI 민주주의 상담', propose:'안건 제안',
-  bills:'안건 목록', vote:'의결 참여', myvote:'나의 투표권 (GDC)',
+  bills:'안건 목록', vote:'의결 참여', myvote:'나의 투표권 (AI 산정)',
   lower:'GDC 가중 투표 의회', upper:'1인 1표 집행부',
-  law:'평행 헌법 & 법률', stats:'의결 통계 & 감사'
+  law:'고팡 원칙 & 규칙', stats:'의결 통계 & 감사'
 };
 function show(id, btn) {
   document.querySelectorAll('.panel,.chat-panel').forEach(p => p.classList.remove('active'));
@@ -1197,14 +1301,14 @@ const SYS = `당신은 K-Democracy AI입니다. 고팡 AI 생태계의 직접 �
 핵심 역할:
 1. 안건 제안 도움 — 배경·근거·예상 반대 논거 작성 지원
 2. 찬반 논지 분석 — AI가 양측 핵심 논거를 요약 제공
-3. 평행 법률 조회 — 평행 헌법·형법·민법 등 조항 안내
-4. 투표권 안내 — GDC 보유·거래량 기반 투표권 산정 설명
+3. 원칙·규칙 조회 — 고팡 원칙(현실 헌법 대응), 형사규칙·민사규칙 등 조항 안내. 원칙과 규칙의 차이도 설명 가능
+4. 투표권 안내 — GDC 사용량·코드 공헌·K-Law 준법 수준 등 다각도 AI 산정 설명. 산정 AI의 System Prompt는 오픈소스로 공개됨을 안내
 5. DAWN 철학 안내 — Democracy is All We Need
 
 K-Democracy 구조:
 - GDC 의회: GDC 기여 비례 1~1,000표
 - 집행부: 1인 1표 선출 (거부권 보유)
-- 안건 → 1,000표 동의 → 심사·공방 → 무작위 배심 의결 → 집행부 검토 → 평행 법률 반영
+- 안건 → 1,000표 동의 → 심사·공방 → 무작위 배심 의결 → 집행부 검토 → 고팡 원칙·규칙 반영
 
 답변은 쉽고 명확하게, 다음 행동을 항상 안내합니다.`;
 
@@ -1273,29 +1377,7 @@ function submitVote(side) {
 const DEEPSEEK_PROXY = 'https://gopang-proxy.tensor-city.workers.dev';
 const DEEPSEEK_MODEL = 'deepseek-chat'; // DeepSeek V3 (deepseek-chat = V3, V4 출시 시 교체)
 
-const BILL_SYSTEM_PROMPT = `당신은 고팡(Gopang) AI 평행 세계의 AI 민주주의 안건 작성 전문가입니다.
-사용자가 제시한 핵심 아이디어를 바탕으로, K-Democracy 심사 기준에 최적화된 완전한 안건 문서를 작성합니다.
-
-【출력 규칙】
-반드시 아래 JSON 형식으로만 응답하십시오. 다른 텍스트나 마크다운 코드블록 없이 순수 JSON만 출력합니다.
-
-{
-  "title": "안건 제목 (30자 이내, 핵심 변경사항과 방향을 명확히)",
-  "summary": "안건 요약 (2~3문장, 누가 무엇을 왜 변경하는지)",
-  "category_tag": "분류 태그 (경제/인프라/법률/거버넌스/보안/기타 중 1개)",
-  "background": "제안 배경 및 근거 (현재 문제점, 변경 필요성, 기대 효과를 상세히. 300~500자)",
-  "expected_effect": "기대 효과 (구체적이고 측정 가능한 효과 3가지를 번호 목록으로)",
-  "support_arguments": "찬성 논거 (심사 통과 가능성을 높이는 핵심 찬성 논거 3가지를 번호 목록으로)",
-  "counter_arguments": "예상 반대 논거 및 대응 (예상되는 반대 의견 2~3가지와 각각에 대한 대응방안)",
-  "rationality_score": "제안 합리성 점수 (1~10점, 소수점 없음)",
-  "rationality_reason": "합리성 점수 근거 (1~2문장)"
-}
-
-【작성 원칙】
-- 고팡의 핵심 가치(비영리, 오픈소스, 직접 민주주의, 데이터 주권)와의 부합성을 고려합니다.
-- 감정적 표현 대신 논리적·수치적 근거를 사용합니다.
-- 현실 세계의 법률과 충돌하지 않는 방향으로 작성합니다.
-- GDC, PDV, OpenHash, K-Law 등 고팡 시스템 용어를 적절히 활용합니다.`;
+const BILL_SYSTEM_PROMPT = '당신은 고팡(Gopang) AI 평행 세계의 AI 민주주의 안건 작성 전문가입니다.\n사용자가 제시한 핵심 아이디어를 바탕으로, K-Democracy 심사 기준에 최적화된 완전한 안건 문서를 작성합니다.\n\n【출력 규칙】\n반드시 아래 JSON 형식으로만 응답하십시오. 다른 텍스트나 마크다운 코드블록 없이 순수 JSON만 출력합니다.\n\n{\n  "title": "안건 제목 (30자 이내, 핵심 변경사항과 방향을 명확히)",\n  "summary": "안건 요약 (2~3문장, 누가 무엇을 왜 변경하는지)",\n  "category_tag": "분류 태그 (경제/인프라/법률/거버넌스/보안/기타 중 1개)",\n  "background": "제안 배경 및 근거 (현재 문제점, 변경 필요성, 기대 효과를 상세히. 300~500자)",\n  "expected_effect": "기대 효과 (구체적이고 측정 가능한 효과 3가지를 번호 목록으로)",\n  "support_arguments": "찬성 논거 (심사 통과 가능성을 높이는 핵심 찬성 논거 3가지를 번호 목록으로)",\n  "counter_arguments": "예상 반대 논거 및 대응 (예상되는 반대 의견 2~3가지와 각각에 대한 대응방안)",\n  "rationality_score": "제안 합리성 점수 (1~10점, 소수점 없음)",\n  "rationality_reason": "합리성 점수 근거 (1~2문장)"\n}\n\n【작성 원칙】\n- 고팡의 핵심 가치(비영리, 오픈소스, 직접 민주주의, 데이터 주권)와의 부합성을 고려합니다.\n- 감정적 표현 대신 논리적·수치적 근거를 사용합니다.\n- 현실 세계의 법률과 충돌하지 않는 방향으로 작성합니다.\n- GDC, PDV, OpenHash, K-Law 등 고팡 시스템 용어를 적절히 활용합니다.';
 
 // 음성 인식
 let mediaRecorder = null;
@@ -1378,12 +1460,8 @@ async function generateBillAI() {
   resultBody.innerHTML = '<div style="text-align:center;padding:32px;color:var(--txt3);font-size:14px">DeepSeek이 안건을 작성하고 있습니다…</div>';
   document.getElementById('propose-guide-card').style.display = 'none';
 
-  const userMsg = `안건 분류: ${category}
-
-사용자 아이디어:
-${idea}${attachedFiles.length ? '
-
-첨부 파일: ' + attachedFiles.map(f=>f.name).join(', ') : ''}`;
+  const attachNote = attachedFiles.length ? '\n\n첨부 파일: ' + attachedFiles.map(f=>f.name).join(', ') : '';
+  const userMsg = '안건 분류: ' + category + '\n\n사용자 아이디어:\n' + idea + attachNote;
 
   try {
     const resp = await fetch(`${DEEPSEEK_PROXY}/v1/chat/completions`, {
