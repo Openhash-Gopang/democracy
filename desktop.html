@@ -1491,6 +1491,7 @@ async function generateBillAI() {
   resultCard.classList.add('visible');
   if (dot) { dot.classList.add('loading'); }
   setStep(STEPS[0].msg);
+  setTimeout(function(){ resultCard.scrollIntoView({ behavior:'smooth', block:'start' }); }, 80);
 
   // 프로그레스바 + 단계 메시지 타이머
   var stepTimers = [];
@@ -1515,7 +1516,7 @@ async function generateBillAI() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,
-        max_tokens: 1500,
+        max_tokens: 2500,
         temperature: 0.7,
         messages: [
           { role: 'system', content: BILL_SYSTEM_PROMPT },
@@ -1529,8 +1530,25 @@ async function generateBillAI() {
     }
     const data = await resp.json();
     const raw  = data.choices?.[0]?.message?.content || '';
-    const jsonStr = raw.replace(/^```json|^```|```$/gm, '').trim();
-    generatedBill = JSON.parse(jsonStr);
+    var jsonStr = raw.replace(/^```json|^```|```$/gm, '').trim();
+
+    // 잘린 JSON 복구: 마지막 완전한 값 뒤를 닫아줌
+    function repairJson(s) {
+      try { return JSON.parse(s); } catch(_) {}
+      // 열린 문자열 닫기
+      var fixed = s;
+      var openStr = (fixed.split('"').length - 1) % 2 !== 0;
+      if (openStr) fixed += '"';
+      // 열린 중괄호 닫기
+      var opens = (fixed.match(/\{/g)||[]).length - (fixed.match(/\}/g)||[]).length;
+      for (var i=0; i<opens; i++) fixed += '}';
+      try { return JSON.parse(fixed); } catch(_) {}
+      // 마지막 쉼표 제거 후 재시도
+      fixed = fixed.replace(/,\s*([}\]])/, '$1');
+      try { return JSON.parse(fixed); } catch(e) { throw new Error('JSON 파싱 실패: ' + e.message); }
+    }
+
+    generatedBill = repairJson(jsonStr);
 
     // 타이머 모두 취소
     stepTimers.forEach(function(t){ clearTimeout(t); });
@@ -1543,6 +1561,7 @@ async function generateBillAI() {
       renderAIResult(generatedBill);
       if (dot)   { dot.classList.remove('loading'); dot.style.background = '#3ecf8e'; }
       if (label) { label.textContent = 'AI 작성 완료'; }
+      setTimeout(function(){ resultCard.scrollIntoView({ behavior:'smooth', block:'start' }); }, 80);
     }, 300);
 
   } catch(e) {
