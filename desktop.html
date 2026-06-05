@@ -1450,27 +1450,26 @@ function removeAttach(i) {
 
 async function generateBillAI() {
   const idea = document.getElementById('bill-idea-input')?.value?.trim();
-  const category = generatedBill?.category_tag || '';
   if (!idea) { toast('⚠️ 제안 내용을 먼저 입력해 주세요.'); return; }
 
-  const btn = document.getElementById('ai-gen-btn');
-  btn.disabled = true;
-  btn.textContent = '생성 중...';
-
-  // 결과 카드 표시
+  const btn    = document.getElementById('ai-gen-btn');
   const resultCard = document.getElementById('ai-result-card');
   const resultBody = document.getElementById('ai-result-body');
-  const indicator = document.getElementById('ai-generating-indicator');
-  resultCard.classList.add('visible');
-  indicator.style.display = 'flex';
-  resultBody.innerHTML = '<div style="text-align:center;padding:32px;color:var(--txt3);font-size:14px">DeepSeek이 안건을 작성하고 있습니다…</div>';
-  
+  const dot    = document.getElementById('ai-status-dot');
+  const label  = document.getElementById('ai-result-hd-label');
 
-  const attachNote = attachedFiles.length ? '\n\n첨부 파일: ' + attachedFiles.map(f=>f.name).join(', ') : '';
-  const userMsg = '안건 분류: ' + category + '\n\n사용자 아이디어:\n' + idea + attachNote;
+  btn.disabled = true;
+  btn.textContent = '생성 중…';
+  resultCard.classList.add('visible');
+  if (dot)   { dot.classList.add('loading'); }
+  if (label) { label.textContent = 'AI 작성 중…'; }
+  resultBody.innerHTML = '<div style="padding:40px;text-align:center;color:#94a3b8;font-size:14px">DeepSeek이 안건을 작성하고 있습니다…</div>';
+
+  const attachNote = attachedFiles.length ? '\n\n첨부 파일: ' + attachedFiles.map(function(f){return f.name;}).join(', ') : '';
+  const userMsg = '사용자 아이디어:\n' + idea + attachNote;
 
   try {
-    const resp = await fetch(`${DEEPSEEK_PROXY}/v1/chat/completions`, {
+    const resp = await fetch(DEEPSEEK_PROXY + '/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1479,23 +1478,29 @@ async function generateBillAI() {
         temperature: 0.7,
         messages: [
           { role: 'system', content: BILL_SYSTEM_PROMPT },
-          { role: 'user', content: userMsg }
+          { role: 'user',   content: userMsg }
         ]
       })
     });
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('HTTP ' + resp.status + ' — ' + errText.slice(0, 200));
+    }
     const data = await resp.json();
-    const raw = data.choices?.[0]?.message?.content || '';
-    // JSON 파싱 (코드블록 제거)
-    const jsonStr = raw.replace(/```json|```/g, '').trim();
+    const raw  = data.choices?.[0]?.message?.content || '';
+    const jsonStr = raw.replace(/^```json|^```|```$/gm, '').trim();
     generatedBill = JSON.parse(jsonStr);
     renderAIResult(generatedBill);
+    if (dot)   { dot.classList.remove('loading'); dot.style.background = '#3ecf8e'; }
+    if (label) { label.textContent = 'AI 작성 완료'; }
   } catch(e) {
-    resultBody.innerHTML = `<div style="padding:20px;color:#ef4444;font-size:14px">⚠️ AI 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.<br><small style="color:var(--txt3)">${e.message}</small></div>`;
+    resultBody.innerHTML = '<div style="padding:24px 16px;color:#dc2626;font-size:13.5px">⚠️ 생성 중 오류가 발생했습니다.<br><small style="color:#94a3b8;font-size:12px">' + e.message + '</small></div>';
+    if (dot)   { dot.classList.remove('loading'); dot.style.background = '#ef4444'; }
+    if (label) { label.textContent = '오류 발생'; }
   }
 
-  indicator.style.display = 'none';
   btn.disabled = false;
-  btn.textContent = '✨ AI 완성';
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 2 11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> AI 완성';
 }
 
 function renderAIResult(bill) {
