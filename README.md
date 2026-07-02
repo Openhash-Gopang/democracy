@@ -1,6 +1,6 @@
 # K-Democracy — 고팡 AI 민주주의
 
-> **democracy.gopang.net** | [gopang.net](https://gopang.net) | [K-Law](https://klaw.gopang.net)
+> **democracy.hondi.net** | [hondi.net](https://hondi.net) | [K-Law](https://klaw.hondi.net)
 
 고팡(Gopang) AI 평행 세계의 입법 시스템입니다.  
 누구나 안건을 제안하고, 공헌도에 비례한 의결권으로 결정하며, 결과는 OpenHash에 영구 기록됩니다.
