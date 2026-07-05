@@ -1517,6 +1517,7 @@ async function generateBillAI() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,
+        service_id: 'kdemocracy', // 2026-07-05: UNIVERSAL 레이어 강제 주입
         max_tokens: 2500,
         temperature: 0.7,
         messages: [
