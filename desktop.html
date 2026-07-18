@@ -1335,12 +1335,22 @@ async function chatSend() {
   btn.disabled = true;
   const tid = addBubble('…', 'ai');
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+    // 2026-07-18 수정: 이전엔 api.anthropic.com을 키 없이 직접 호출해서
+    // 항상 401(더 정확히는 CORS 차단으로 응답 자체에 도달 못함)로 실패하는
+    // 죽은 코드였다. 이 파일 안에서 이미 정상 동작 중인
+    // DEEPSEEK_PROXY+'/chat/completions' 패턴(제안서 초안 생성 기능,
+    // 위쪽 참고)으로 교체했다 — 별도 신규 경로가 아니라 기존 검증된 경로 재사용.
+    const r = await fetch(DEEPSEEK_PROXY + '/chat/completions', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYS, messages: hist.slice(-10) })
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL, service_id: 'kdemocracy',
+        max_tokens: 1000, temperature: 0.7,
+        messages: [{ role: 'system', content: SYS }, ...hist.slice(-10)],
+      })
     });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
-    const txt = d.content?.find(c => c.type === 'text')?.text || '잠시 후 다시 시도해 주세요.';
+    const txt = d.choices?.[0]?.message?.content || '잠시 후 다시 시도해 주세요.';
     document.getElementById(tid)?.remove();
     addBubble(txt, 'ai');
     hist.push({ role: 'assistant', content: txt });
